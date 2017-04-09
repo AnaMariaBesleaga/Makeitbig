@@ -1,19 +1,25 @@
 package com.suspedeal.makeitbig;
 
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,39 +28,32 @@ public class MainActivity extends AppCompatActivity {
     private EditText etInput;
     private TextView tvBig;
     private Button btnEnlarge;
-    private ConstraintLayout rootView;
+    private RelativeLayout rootView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.content_main);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         etInput = (EditText) findViewById(R.id.etInput);
         tvBig = (TextView) findViewById(R.id.tvBig);
         btnEnlarge = (Button) findViewById(R.id.btnEnlarge);
 
-        rootView = (ConstraintLayout) findViewById(R.id.content);
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        rootView = (RelativeLayout) findViewById(R.id.content);
+
+        rootView = (RelativeLayout) findViewById(R.id.content);
+        rootView.post(new Runnable()
+        {
+
             @Override
-            public void onGlobalLayout() {
-                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                //rootView.getHeight(); //height is ready
-                Toast.makeText(MainActivity.this, "Width of RootView is: " + rootView.getLayoutParams().width, Toast.LENGTH_SHORT).show();
+            public void run()
+            {
+                Toast.makeText(MainActivity.this, "Width of RootView is: " + rootView.getWidth(), Toast.LENGTH_SHORT).show();
+
             }
         });
-
 
     }
 
@@ -83,21 +82,62 @@ public class MainActivity extends AppCompatActivity {
     public void Enlarge(View v){
         tvBig.setText(etInput.getText().toString());
         tvBig.setVisibility(View.VISIBLE);
+
+
+            tvBig.setTextSize(90);
+
+        tvBig.post(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                Toast.makeText(MainActivity.this, "Height of TextView is: " + tvBig.getHeight(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
         etInput.setVisibility(View.GONE);
         btnEnlarge.setVisibility(View.GONE);
-        Grow();
+        //Grow();
 
     }
 
     public void Grow(){
         Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.anim);
-        tvBig.measure(0, 0);
 
-        try{
-            tvBig.startAnimation(myAnim);
-        }finally {
-            Toast.makeText(MainActivity.this, "Width of TextView is: " + tvBig.getMeasuredWidth(), Toast.LENGTH_SHORT).show();
-        }
+        myAnim.setAnimationListener(new Animation.AnimationListener(){
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //Toast.makeText(MainActivity.this, "Width of TextView is: " + tvBig.getWidth(), Toast.LENGTH_SHORT).show();
+
+            }
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+
+//                Rect bounds = new Rect();
+//                Paint textPaint = tvBig.getPaint();
+//                textPaint.getTextBounds(tvBig.getText().toString(),0,tvBig.getText().toString().length(),bounds);
+//                int height = bounds.height();
+//                int width = bounds.width();
+//
+//                if(width > 100){
+//                    tvBig.setWidth(100);
+//                }
+            }
+        });
+
+        //tvBig.startAnimation(myAnim);
+    }
+
+    public void decreaseFontSize(){
+
+
+
+
     }
 
 }
