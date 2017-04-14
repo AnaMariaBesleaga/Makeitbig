@@ -1,5 +1,6 @@
 package com.suspedeal.makeitbig;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -32,32 +33,53 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mAutofitOutput;
+    private EditText etInput;
+    private Button btnMakeBig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
 
-        mAutofitOutput = (TextView)findViewById(R.id.output_autofit);
+        setUpViews();
 
-        ((EditText)findViewById(R.id.input)).addTextChangedListener(new TextWatcher() {
+        btnMakeBig.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                // do nothing
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                //mOutput.setText(charSequence);
-                mAutofitOutput.setText(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // do nothing
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, TextActivity.class);
+                i.putExtra("text", etInput.getText().toString());
+                startActivity(i);
             }
         });
     }
 
+    private void setUpViews() {
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+        etInput = (EditText) findViewById(R.id.input);
+        btnMakeBig = (Button) findViewById(R.id.btnMakeBig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 }

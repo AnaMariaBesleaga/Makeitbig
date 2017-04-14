@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <LinearLayout
+        android:id="@+id/llmain"
+        android:layout_width="match_parent"
+        android:layout_below="@id/my_toolbar"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <EditText
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_input" />
 
-        <me.grantland.widget.AutofitLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnMakeBig"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
-            <me.grantland.widget.AutofitTextView
-                android:id="@+id/output_autofit"
-                android:layout_width="match_parent"
-                android:maxLines="4"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="100sp"
-                autofit:minTextSize="8sp"
-                />
-        </me.grantland.widget.AutofitLayout>
-
+            android:text="@string/btn_text" />
 
     </LinearLayout>
-</ScrollView>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/llmain"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>
