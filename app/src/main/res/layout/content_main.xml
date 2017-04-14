@@ -1,48 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.suspedeal.makeitbig.MainActivity">
-
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:weightSum="1">
-
+        android:orientation="vertical"
+        >
         <EditText
-            android:id="@+id/etInput"
-            android:layout_width="wrap_content"
+            android:id="@+id/input"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="0.7"
-            android:ems="10"
-            android:hint="@string/hint_input"
-            android:inputType="textPersonName" />
+            android:hint="@string/hint_input" />
 
-        <Button
-            android:id="@+id/btnEnlarge"
-            android:layout_width="wrap_content"
+        <me.grantland.widget.AutofitLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:onClick="Enlarge"
-            android:text="@string/enlarge" />
+            >
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/output_autofit"
+                android:layout_width="match_parent"
+                android:maxLines="4"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:textSize="100sp"
+                autofit:minTextSize="8sp"
+                />
+        </me.grantland.widget.AutofitLayout>
+
 
     </LinearLayout>
-
-    <me.grantland.widget.AutofitTextView
-        android:id="@+id/tvBig"
-        android:textSize="60sp"
-        autofit:minTextSize="40sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
-</RelativeLayout>
+</ScrollView>
