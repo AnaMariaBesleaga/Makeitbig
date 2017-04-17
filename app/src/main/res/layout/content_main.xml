@@ -14,7 +14,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <LinearLayout
-        android:id="@+id/llmain"
+        android:id="@+id/layout_main"
         android:layout_width="match_parent"
         android:layout_below="@id/my_toolbar"
         android:layout_height="wrap_content"
@@ -28,14 +28,25 @@
 
         <Button
             android:id="@+id/btnMakeBig"
+            android:elevation="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_text" />
 
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
+
+    <com.suspedeal.makeitbig.utils.RecyclerViewEmptySupport
+        android:id="@+id/recycle_history"
         android:layout_width="match_parent"
-        android:layout_below="@id/llmain"
+        android:layout_below="@id/layout_main"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+    </com.suspedeal.makeitbig.utils.RecyclerViewEmptySupport>
+
+    <TextView android:id="@+id/list_empty"
+        android:layout_below="@+id/recycle_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_history"
+        />
+
 </RelativeLayout>
