@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:autofit="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@android:color/black"
-    android:layout_height="match_parent"
-    tools:context="com.suspedeal.makeitbig.TextActivity">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black">
 
-    <me.grantland.widget.AutofitLayout
+    <com.suspedeal.makeitbig.AutoResizeTextView
         android:layout_width="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
-        >
-        <me.grantland.widget.AutofitTextView
-            android:id="@+id/output_autofit"
-            android:layout_width="match_parent"
-            android:maxLines="4"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:layout_height="wrap_content"
-            android:textSize="100sp"
-            autofit:minTextSize="8sp"
-            />
-    </me.grantland.widget.AutofitLayout>
+        android:id="@+id/bigText"
+        android:layout_gravity="center"
+        android:textSize="200sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_height="match_parent"/>
 
-</RelativeLayout>
+</FrameLayout>

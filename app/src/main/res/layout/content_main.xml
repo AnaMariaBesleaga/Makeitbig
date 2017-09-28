@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
+    <include
+        android:id="@+id/include_app_bar"
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/layout_main"
         android:layout_width="match_parent"
-        android:layout_below="@id/my_toolbar"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/input"
+        <com.beardedhen.androidbootstrap.BootstrapEditText
+            android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_input" />
+            android:layout_margin="10dp"
+            android:gravity="top|start"
+            android:hint="@string/hint"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            app:bootstrapBrand="info"
+            app:bootstrapSize="lg"
+            app:roundedCorners="true"
+            />
 
-        <Button
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnMakeBig"
-            android:elevation="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_text" />
+            android:layout_gravity="center"
+            app:roundedCorners="true"
+            android:layout_margin="10dp"
+            android:text="@string/btn_text"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:bootstrapText="Make it big"/>
 
     </LinearLayout>
 
-    <com.suspedeal.makeitbig.utils.RecyclerViewEmptySupport
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_history"
         android:layout_width="match_parent"
-        android:layout_below="@id/layout_main"
-        android:layout_height="match_parent">
-    </com.suspedeal.makeitbig.utils.RecyclerViewEmptySupport>
+        android:layout_height="match_parent"
+        android:padding="10dp">
+    </android.support.v7.widget.RecyclerView>
 
-    <TextView android:id="@+id/list_empty"
-        android:layout_below="@+id/recycle_history"
+    <TextView
+        android:id="@+id/list_empty"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_history"
         />
 
-</RelativeLayout>
+</LinearLayout>

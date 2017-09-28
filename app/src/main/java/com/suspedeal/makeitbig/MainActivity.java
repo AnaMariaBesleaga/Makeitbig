@@ -1,126 +1,141 @@
 package com.suspedeal.makeitbig;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.widget.TextView;
 
-import com.suspedeal.makeitbig.utils.RecyclerViewEmptySupport;
-import com.suspedeal.makeitbig.views.adapters.MyAdapter;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.suspedeal.makeitbig.base.BaseActivity;
 
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity implements OnTextClickListener {
 
-    private EditText etInput;
-    private Button btnMakeBig;
-    private View mEmptyView;
-    private RecyclerViewEmptySupport recyclerHistory;
-    private RecyclerViewEmptySupport.Adapter mAdapter;
-    private RecyclerViewEmptySupport.LayoutManager mLayoutManager;
-    private ArrayList<String> mHistoryArray;
+    private static final String HISTORY_PREF_FILE = "MBHistory";
+    @BindView(R.id.edit)
+    BootstrapEditText edit;
+    @BindView(R.id.btnMakeBig)
+    BootstrapButton makeItBig;
+    @BindView(R.id.recycle_history)
+    RecyclerView historyList;
+    @BindView(R.id.list_empty)
+    TextView emptyListView;
+
+    private TextAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
 
-        setUpViews();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("  " + getString(R.string.app_name));
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        }
 
-        btnMakeBig.setOnClickListener(new View.OnClickListener() {
+        setUpRecyclerView();
+        getHistoryList();
+    }
+
+    private void getHistoryList() {
+        SharedPreferences prefs = getSharedPreferences(HISTORY_PREF_FILE, Context.MODE_PRIVATE);
+        int size = prefs.getInt("array_size", 0);
+        for(int i=0; i<size; i++)
+            adapter.add(prefs.getString("array_" + i, null));
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.content_main;
+    }
+
+    private void emptyInput() {
+        edit.setText("");
+    }
+
+    private void startTextActivity(String text) {
+
+            Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
+            i.putExtra("text", text);
+            startActivity(i);
+
+    }
+
+    private void addToHistory() {
+
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(View v) {
-
-                startTextActivity();
-                addToHistory();
-                emptyInput();
-
-
-            }
-
-            private void emptyInput() {
-                etInput.setText("");
-            }
-
-            private void startTextActivity() {
-                Intent i = new Intent(MainActivity.this, TextActivity.class);
-                i.putExtra("text", etInput.getText().toString());
-                startActivity(i);
-            }
-
-            private void addToHistory() {
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        mHistoryArray.add(etInput.getText().toString());
-
-                    }
-                });
-
+            public void run() {
+                adapter.add(edit.getText().toString());
+                adapter.notifyDataSetChanged();
             }
         });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(mAdapter != null){
-            mAdapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
         }
-    }
-
-    private void setUpViews() {
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
-        etInput = (EditText) findViewById(R.id.input);
-        btnMakeBig = (Button) findViewById(R.id.btnMakeBig);
-        mEmptyView = findViewById(R.id.list_empty);
-
-        setUpRecyclerView();
-
     }
 
     private void setUpRecyclerView() {
-        recyclerHistory = (RecyclerViewEmptySupport) findViewById(R.id.recycle_history);
-        recyclerHistory.setHasFixedSize(true);
-        recyclerHistory.setEmptyView(mEmptyView);
-        mLayoutManager = new LinearLayoutManager(this);
-        recyclerHistory.setLayoutManager(mLayoutManager);
-        mHistoryArray = new ArrayList<>();
-        mHistoryArray.add("Item 1");
-        mAdapter = new MyAdapter(this, mHistoryArray);
-        recyclerHistory.setAdapter(mAdapter);
-
+        historyList.setHasFixedSize(true);
+        LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        historyList.setLayoutManager(mLayoutManager);
+        adapter = new TextAdapter(this);
+        historyList.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
+    @OnClick(R.id.btnMakeBig) void makeItBig(){
+        if(!edit.getText().toString().isEmpty()){
+            addToHistory();
+            addToSharedPreferences();
+            startTextActivity(getInputText());
+            emptyInput();
+        }else{
+            showSnack(getString(R.string.no_input));
         }
+       
+    }
+
+    private String getInputText() {
+
+        return edit.getText().toString();
+    }
+
+    private void addToSharedPreferences() {
+        SharedPreferences prefs = getSharedPreferences(HISTORY_PREF_FILE, Context.MODE_PRIVATE);
+        Editor editor = prefs.edit();
+        editor.putInt("array_size", adapter.getItemCount());
+        for(int i=0;i<adapter.getItemCount(); i++)
+            editor.putString("array_" + i, adapter.getTextListPosition(i));
+        editor.apply();
+    }
+
+    private void showSnack(String string) {
+        Snackbar.make(findViewById(android.R.id.content), string, Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.RED)
+                .show();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void OnTextClicked(String text) {
+        startTextActivity(text);
+
     }
 }
