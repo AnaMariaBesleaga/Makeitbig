@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -12,13 +13,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.codemybrainsout.ratingdialog.RatingDialog;
+import com.julienvey.trello.Trello;
+import com.julienvey.trello.domain.Board;
+import com.julienvey.trello.domain.Card;
+import com.julienvey.trello.domain.TList;
+import com.julienvey.trello.impl.TrelloImpl;
 import com.suspedeal.makeitbig.base.BaseActivity;
+import com.suspedeal.makeitbig.constants.Constants;
+import com.suspedeal.makeitbig.utils.RatingDialogCustom;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.suspedeal.makeitbig.constants.Constants.*;
 
 public class MainActivity extends BaseActivity implements OnTextClickListener {
 
@@ -44,6 +58,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
             getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         }
 
+        initializeRating();
+
         setUpRecyclerView();
         getHistoryList();
     }
@@ -66,7 +82,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     }
 
     private void startTextActivity(String text) {
-
             Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
             i.putExtra("text", text);
             startActivity(i);
@@ -137,5 +152,49 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     public void OnTextClicked(String text) {
         startTextActivity(text);
 
+    }
+
+    private void initializeRating() {
+
+        final RatingDialogCustom ratingDialog = new RatingDialogCustom.BuilderCustom(this)
+                .threshold(3)
+                .title(getString(R.string.rating_text))
+                .session(3)
+                .positiveButtonText(getString(R.string.not_now))
+                .formTitle(getString(R.string.rating_send_message))
+                .formHint(getString(R.string.rating_improve_question))
+                .formSubmitText(getString(R.string.rating_send))
+                .formCancelText(getString(R.string.rating_dialog_cancel))
+                .negativeButtonText("")
+                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
+                    @Override
+                    public void onFormSubmitted(String feedback) {
+                        sendFeedbackToTrello(feedback);
+                    }
+                }).build();
+
+        ratingDialog.show();
+    }
+
+    private void sendFeedbackToTrello(final String feedback) {
+        new sendFeedbackToTrello().execute(feedback);
+    }
+
+    private class sendFeedbackToTrello extends AsyncTask<String, Integer, Card> {
+
+        Trello trelloApi = new TrelloImpl(TRELLO_APP_KEY, TRELLO_ACCESS_TOKEN);
+
+        @Override
+        protected Card doInBackground(String... params) {
+            Card feedBack = new Card();
+            feedBack.setName(params[0]);
+            return trelloApi.createCard(TRELLO_FEEDBACK_LIST, feedBack);
+        }
+
+        @Override
+        protected void onPostExecute(Card result) {
+            super.onPostExecute(result);
+            Toast.makeText(MainActivity.this, getString(R.string.feedback_sent), Toast.LENGTH_SHORT).show();
+        }
     }
 }
