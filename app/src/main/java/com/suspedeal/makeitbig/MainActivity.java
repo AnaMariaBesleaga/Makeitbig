@@ -17,17 +17,12 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
-import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.julienvey.trello.Trello;
-import com.julienvey.trello.domain.Board;
 import com.julienvey.trello.domain.Card;
-import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.constants.Constants;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,7 +54,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
         }
 
         initializeRating();
-
         setUpRecyclerView();
         getHistoryList();
     }
@@ -85,7 +79,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
             Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
             i.putExtra("text", text);
             startActivity(i);
-
     }
 
     private void addToHistory() {
@@ -125,7 +118,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
         }else{
             showSnack(getString(R.string.no_input));
         }
-       
     }
 
     private String getInputText() {
@@ -151,22 +143,21 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     @Override
     public void OnTextClicked(String text) {
         startTextActivity(text);
-
     }
 
     private void initializeRating() {
 
-        final RatingDialogCustom ratingDialog = new RatingDialogCustom.BuilderCustom(this)
-                .threshold(3)
+        final RatingDialogCustom ratingDialog = (RatingDialogCustom) new RatingDialogCustom.BuilderCustom(this)
+                .threshold(STAR_RATING_THRESHOLD)
                 .title(getString(R.string.rating_text))
-                .session(3)
+                .session(SESSION_SHOW)
                 .positiveButtonText(getString(R.string.not_now))
                 .formTitle(getString(R.string.rating_send_message))
                 .formHint(getString(R.string.rating_improve_question))
                 .formSubmitText(getString(R.string.rating_send))
                 .formCancelText(getString(R.string.rating_dialog_cancel))
                 .negativeButtonText("")
-                .onRatingBarFormSumbit(new RatingDialog.Builder.RatingDialogFormListener() {
+                .onRatingBarFormSumbit(new RatingDialogCustom.BuilderCustom.RatingDialogFormListener() {
                     @Override
                     public void onFormSubmitted(String feedback) {
                         sendFeedbackToTrello(feedback);
