@@ -13,8 +13,9 @@
 
     <LinearLayout
         android:id="@+id/layout_main"
+        android:layout_weight="0.2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical">
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
@@ -25,7 +26,6 @@
             android:gravity="top|start"
             android:hint="@string/hint"
             android:inputType="textMultiLine"
-            android:lines="4"
             android:padding="10dp"
             android:scrollbars="vertical"
             app:bootstrapBrand="info"
@@ -50,16 +50,29 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_history"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:padding="10dp">
     </android.support.v7.widget.RecyclerView>
 
     <TextView
         android:id="@+id/list_empty"
         android:padding="10dp"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_history"
         />
+
+    <com.google.android.gms.ads.AdView
+        android:layout_marginBottom="5dp"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7748272108558557/4438899776">
+    </com.google.android.gms.ads.AdView>
 
 </LinearLayout>

@@ -12,11 +12,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
@@ -40,12 +43,17 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     RecyclerView historyList;
     @BindView(R.id.list_empty)
     TextView emptyListView;
+    @BindView(R.id.adView)
+    AdView adView;
 
     private TextAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("  " + getString(R.string.app_name));
@@ -61,7 +69,10 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     private void getHistoryList() {
         SharedPreferences prefs = getSharedPreferences(HISTORY_PREF_FILE, Context.MODE_PRIVATE);
         int size = prefs.getInt("array_size", 0);
-        for(int i=0; i<size; i++)
+        if(size != 0){
+            emptyListView.setVisibility(View.GONE);
+        }
+        for (int i = 0; i < size; i++)
             adapter.add(prefs.getString("array_" + i, null));
 
     }
