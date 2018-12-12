@@ -11,17 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.beardedhen.androidbootstrap.AwesomeTextView
-            android:id="@+id/firstLine"
-            android:gravity="start"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            app:bootstrapBrand="primary"
-            tools:text="Saved text"/>
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                android:id="@+id/firstLine"
+                android:gravity="start"
+                android:layout_weight="0.8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:bootstrapBrand="primary"
+                tools:text="Saved text"/>
+
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                android:id="@+id/deleteItem"
+                android:layout_weight="0.2"
+                android:layout_width="0dp"
+                android:gravity="end"
+                tools:text="X"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                app:fontAwesomeIcon="fa_remove"
+                app:bootstrapBrand="danger" />
+        </LinearLayout>
+
+
 
     </com.beardedhen.androidbootstrap.BootstrapWell>
-
-
 
 </LinearLayout>

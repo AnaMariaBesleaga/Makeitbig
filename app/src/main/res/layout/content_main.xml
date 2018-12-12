@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/include_app_bar"
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:id="@+id/layout_main"
@@ -29,20 +29,19 @@
             android:scrollbars="vertical"
             app:bootstrapBrand="info"
             app:bootstrapSize="lg"
-            app:roundedCorners="true"
-            />
+            app:roundedCorners="true" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnMakeBig"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:roundedCorners="true"
             android:layout_margin="10dp"
             android:text="@string/btn_text"
             app:bootstrapBrand="primary"
             app:bootstrapSize="lg"
-            app:bootstrapText="Make it big"/>
+            app:bootstrapText="Make it big"
+            app:roundedCorners="true" />
 
     </LinearLayout>
 
@@ -51,27 +50,26 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:padding="10dp">
-    </android.support.v7.widget.RecyclerView>
+        android:padding="10dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/list_empty"
-        android:padding="10dp"
-        android:visibility="gone"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_history"
-        />
+        android:layout_weight="0.5"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/no_history" />
 
-    <com.google.android.gms.ads.AdView
-        android:layout_marginBottom="5dp"
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-7748272108558557/4438899776">
-    </com.google.android.gms.ads.AdView>
+        ads:adUnitId="@string/production_ad_id" />
 
 </LinearLayout>
