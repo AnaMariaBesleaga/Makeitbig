@@ -22,10 +22,12 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView text;
+        TextView delete;
 
         MyViewHolder(View view) {
             super(view);
             text = view.findViewById(R.id.firstLine);
+            delete = view.findViewById(R.id.deleteItem);
         }
     }
 
@@ -49,6 +51,15 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
                 listener.OnTextClicked(text);
             }
         });
+
+        holder.delete.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textList.remove(position);
+                listener.OnItemDeleted();
+            }
+        });
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.ads.MobileAds;
 import com.suspedeal.makeitbig.R;
 
@@ -19,6 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
         initializeAds();
+        TypefaceProvider.registerDefaultIconSets();
     }
 
     private void initializeAds() {
