@@ -9,4 +9,6 @@ public class Constants {
     public static final String TRELLO_FEEDBACK_LIST = "5a8d417d8d5330d2d25daae8";
     public static final int SESSION_SHOW = 5;
     public static final int STAR_RATING_THRESHOLD = 3;
+    public static final String AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/6300978111";
+    public static final String AD_UNIT_ID_PROD = "ca-app-pub-7748272108558557/4438899776";
 }
