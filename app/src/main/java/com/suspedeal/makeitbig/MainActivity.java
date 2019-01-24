@@ -28,6 +28,7 @@ import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.constants.Constants;
+import com.suspedeal.makeitbig.model.BigText;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
 
 import butterknife.BindView;
@@ -62,19 +63,20 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         showAds();
+        setUpActionBar();
+        initializeRating();
+        setUpRecyclerView();
+        addTextsFromStorageToAdapterAndShow();
+        checkAndShowAppropiateView();
+    }
 
+    private void setUpActionBar() {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("  " + getString(R.string.app_name));
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
             getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         }
-
-        initializeRating();
-        setUpRecyclerView();
-        addTextsFromStorageToAdapterAndShow();
-        checkAndShowAppropiateView();
     }
 
     private void showAds() {
@@ -125,9 +127,9 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
         edit.setText("");
     }
 
-    private void startTextActivity(String text) {
+    private void startTextActivity(BigText bigText) {
         Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
-        i.putExtra("text", text);
+        i.putExtra("textObject", bigText);
         startActivity(i);
     }
 
@@ -165,7 +167,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
             addNewEntryToAdapter();
             updateSharedPreferences();
             checkAndShowAppropiateView();
-            startTextActivity(getInputText());
+            startTextActivity(new BigText(getInputText(), R.color.red_fox, R.color.wheat));
             clearInputField();
         } else {
             showSnack(getString(R.string.no_input));
@@ -197,7 +199,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
 
     @Override
     public void OnTextClicked(String text) {
-        startTextActivity(text);
+        startTextActivity(new BigText(text, R.color.white, R.color.amber));
     }
 
     private void checkAndShowAppropiateView() {

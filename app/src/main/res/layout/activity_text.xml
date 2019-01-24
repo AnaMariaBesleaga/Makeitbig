@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/black">
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.suspedeal.makeitbig.AutoResizeTextView
-        android:layout_width="match_parent"
         android:id="@+id/bigText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:textSize="200sp"
         android:gravity="center"
-        android:textColor="@android:color/white"
-        android:layout_height="match_parent"/>
+        android:textSize="200sp" />
 
 </FrameLayout>
