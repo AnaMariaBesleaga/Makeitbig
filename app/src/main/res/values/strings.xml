@@ -16,6 +16,4 @@
     <string name="rating_send">Send</string>
     <string name="rating_send_message">Send us a message</string>
     <string name="feedback_sent">Thanks for your feedback</string>
-    <string name="test_ad_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="production_ad_id">ca-app-pub-7748272108558557/4438899776</string>
 </resources>

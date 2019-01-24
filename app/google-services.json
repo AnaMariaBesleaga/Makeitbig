@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "168196438655-bkv4kra8i3nh80t083e2v8g9nlrqd2df.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suspedeal.makeitbig",
+            "certificate_hash": "49c0ee1386c49592b86fb4252a3434b15daf7f8f"
+          }
+        },
+        {
           "client_id": "168196438655-agm1brmshqjr6fofuaude6mtdlv5uo44.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168196438655-agm1brmshqjr6fofuaude6mtdlv5uo44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

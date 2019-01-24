@@ -13,23 +13,31 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.suspedeal.makeitbig.base.BaseActivity;
+import com.suspedeal.makeitbig.constants.Constants;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.suspedeal.makeitbig.constants.Constants.*;
+import static com.suspedeal.makeitbig.constants.Constants.SESSION_SHOW;
+import static com.suspedeal.makeitbig.constants.Constants.STAR_RATING_THRESHOLD;
+import static com.suspedeal.makeitbig.constants.Constants.TRELLO_ACCESS_TOKEN;
+import static com.suspedeal.makeitbig.constants.Constants.TRELLO_APP_KEY;
+import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
 
 /**
  * The text which are made big are saved in shared preferences for peristence. The in memory save is
@@ -46,8 +54,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     RecyclerView historyList;
     @BindView(R.id.list_empty)
     TextView emptyListView;
-    @BindView(R.id.adView)
-    AdView adView;
+    @BindView(R.id.adBannerLayout)
+    LinearLayout adBannerLayout;
 
     private TextAdapter adapter;
 
@@ -55,8 +63,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+        showAds();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("  " + getString(R.string.app_name));
@@ -68,6 +75,19 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
         setUpRecyclerView();
         addTextsFromStorageToAdapterAndShow();
         checkAndShowAppropiateView();
+    }
+
+    private void showAds() {
+        AdView mAdView = new AdView(this);
+        mAdView.setAdSize(AdSize.BANNER);
+        if (BuildConfig.DEBUG) {
+            mAdView.setAdUnitId(Constants.AD_UNIT_ID_TEST);
+        } else {
+            mAdView.setAdUnitId(Constants.AD_UNIT_ID_PROD);
+        }
+        adBannerLayout.addView(mAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
