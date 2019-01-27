@@ -7,6 +7,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +21,15 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
-import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
@@ -30,6 +37,8 @@ import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.constants.Constants;
 import com.suspedeal.makeitbig.model.BigText;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,10 +50,10 @@ import static com.suspedeal.makeitbig.constants.Constants.TRELLO_APP_KEY;
 import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
 
 /**
- * The text which are made big are saved in shared preferences for peristence. The in memory save is
+ * The text which are made big are saved in shared preferences for persistence. The in memory save is
  * done inside the TextAdapter class
  */
-public class MainActivity extends BaseActivity implements OnTextClickListener {
+public class MainActivity extends BaseActivity implements OnTextClickListener, IMainActivity {
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
     @BindView(R.id.edit)
@@ -59,16 +68,72 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
     LinearLayout adBannerLayout;
 
     private TextAdapter adapter;
+    private ArrayList<BigText> mThemes = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        saveFirstThemeToDatabase();
+        getThemesFromDatabase();
+
+
+
         showAds();
         setUpActionBar();
         initializeRating();
         setUpRecyclerView();
         addTextsFromStorageToAdapterAndShow();
         checkAndShowAppropiateView();
+    }
+
+    private void getThemesFromDatabase() {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference themesRef = database.getReference("themes");
+
+        Query query = themesRef.orderByChild("uid");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot themeSnapshot : dataSnapshot.getChildren()) {
+                    BigText theme = themeSnapshot.getValue(BigText.class);
+                    if (theme != null) {
+                       mThemes.add(theme);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Handle possible errors.
+            }
+        });
+
+
+
+    }
+
+    private void saveFirstThemeToDatabase() {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference themesRef = database.getReference("themes");
+        String uid = themesRef.push().getKey();
+        BigText bigText = new BigText("This is what the text looks like", R.color.purple_amethyst, R.color.love_red);
+        bigText.setUid(uid);
+
+        themesRef.child(uid).setValue(bigText, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    showToast(databaseError.getMessage());
+                } else {
+                    showToast("Added theme to DB");
+                }
+            }
+        });
+
     }
 
     private void setUpActionBar() {
@@ -167,7 +232,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
             addNewEntryToAdapter();
             updateSharedPreferences();
             checkAndShowAppropiateView();
-            startTextActivity(new BigText(getInputText(), R.color.red_fox, R.color.wheat));
+            startTextActivity(mThemes.get(0));
             clearInputField();
         } else {
             showSnack(getString(R.string.no_input));
@@ -245,6 +310,11 @@ public class MainActivity extends BaseActivity implements OnTextClickListener {
 
     private void sendFeedbackToTrello(final String feedback) {
         new sendFeedbackToTrello().execute(feedback);
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     private class sendFeedbackToTrello extends AsyncTask<String, Integer, Card> {
