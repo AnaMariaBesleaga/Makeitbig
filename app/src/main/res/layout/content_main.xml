@@ -31,17 +31,38 @@
             app:bootstrapSize="lg"
             app:roundedCorners="true" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/btnMakeBig"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:text="@string/btn_text"
-            app:bootstrapBrand="primary"
-            app:bootstrapSize="lg"
-            app:bootstrapText="Make it big"
-            app:roundedCorners="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content">
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btnMakeBig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="@string/btn_text"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="lg"
+                app:bootstrapText="Make it big"
+                app:roundedCorners="true" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btnAddNewTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="@string/btn_add_new_theme"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="lg"
+                app:bootstrapText="Add theme"
+                app:roundedCorners="true" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

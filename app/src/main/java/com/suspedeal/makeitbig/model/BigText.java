@@ -2,35 +2,32 @@ package com.suspedeal.makeitbig.model;
 
 import java.io.Serializable;
 
-/**
- * TODO: Add a class header comment!
- */
 public class BigText implements Serializable {
 
-    private String mText;
-    private int mTextColour;
-    private int mBackgroundColour;
+    private String text;
+    private String textColour;
     private String uid;
-
-    public BigText(String mText, int mTextColour, int mBackgroundColour) {
-        this.mText = mText;
-        this.mTextColour = mTextColour;
-        this.mBackgroundColour = mBackgroundColour;
-    }
+    private boolean active;
+    private boolean free;
+    private String backgroundUrl;
 
     public BigText() {
     }
 
+    public BigText(String text, String textColour, boolean active, boolean free) {
+        this.text = text;
+        this.textColour = textColour;
+        this.active = active;
+        this.free = free;
+        this.backgroundUrl = "";
+    }
+
     public String getText() {
-        return mText;
+        return text;
     }
 
-    public int getTextColour() {
-        return mTextColour;
-    }
-
-    public int getBackgroundColour() {
-        return mBackgroundColour;
+    public String getTextColour() {
+        return textColour;
     }
 
     public String getUid() {
@@ -42,14 +39,34 @@ public class BigText implements Serializable {
     }
 
     public void setText(String mText) {
-        this.mText = mText;
+        this.text = mText;
     }
 
-    public void setTextColour(int mTextColour) {
-        this.mTextColour = mTextColour;
+    public void setTextColour(String mTextColour) {
+        this.textColour = mTextColour;
     }
 
-    public void setBackgroundColour(int mBackgroundColour) {
-        this.mBackgroundColour = mBackgroundColour;
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
+    }
+
+    public String getBackgroundUrl() {
+        return backgroundUrl;
+    }
+
+    public void setBackgroundUrl(String backgroundUrl) {
+        this.backgroundUrl = backgroundUrl;
     }
 }

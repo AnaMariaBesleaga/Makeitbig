@@ -16,4 +16,8 @@
     <string name="rating_send">Send</string>
     <string name="rating_send_message">Send us a message</string>
     <string name="feedback_sent">Thanks for your feedback</string>
+    <string name="btn_add_new_theme">Add</string>
+    <string name="add_new_theme_text">1. Add entry to DB \n2. Add background image to storage with ID from new theme \n3. Populate entry in DB with storage URL</string>
+    <string name="new_theme_id_hint">New id</string>
+    <string name="new_theme_color_hint">Enter text colour</string>
 </resources>

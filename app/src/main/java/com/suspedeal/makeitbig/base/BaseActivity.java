@@ -10,7 +10,7 @@ import com.suspedeal.makeitbig.R;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IBaseActivityView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
