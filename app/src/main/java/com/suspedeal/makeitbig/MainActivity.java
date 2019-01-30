@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         initializeRating();
         setUpRecyclerView();
         addTextsFromStorageToAdapterAndShow();
-        checkAndShowAppropiateView();
+        showEmptyListViewIfNoEntriesLeft();
     }
 
     private void showAddThemeButtonIfDebug() {
@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         if (!getInputText().isEmpty()) {
             addNewEntryToAdapter();
             updateSharedPreferences();
-            checkAndShowAppropiateView();
+            showEmptyListViewIfNoEntriesLeft();
             setTextOnBigTextObject(getInputText());
             startTextActivity(mCurrentSelectedTheme);
             clearInputField();
@@ -250,7 +250,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         //the new list must be saved back to shared preferences; even if zero entries because shared
         // preferences must reflect that there are no entries.
         updateSharedPreferences();
-        checkAndShowAppropiateView();
+        showEmptyListViewIfNoEntriesLeft();
     }
 
     private String getInputText() {
@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         startTextActivity(mCurrentSelectedTheme);
     }
 
-    private void checkAndShowAppropiateView() {
+    private void showEmptyListViewIfNoEntriesLeft() {
 
         if (adapter.getItemCount() != 0) {
             hideEmptyView();
