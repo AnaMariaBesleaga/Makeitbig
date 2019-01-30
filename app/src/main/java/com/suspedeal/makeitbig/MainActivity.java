@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,16 +22,12 @@ import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
@@ -65,6 +59,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     private static final String EMPTY = "";
     private TextAdapter adapter;
     private ArrayList<BigText> mThemes = new ArrayList<>();
+    private BigText mCurrentSelectedTheme;
 
     @BindView(R.id.edit)
     BootstrapEditText edit;
@@ -82,7 +77,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         showAddThemeButtonIfDebug();
         getThemesFromDatabase();
         showAds();
@@ -94,12 +88,14 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showAddThemeButtonIfDebug() {
-        if(BuildConfig.DEBUG){
-            btnAddNewTheme.setVisibility(View.VISIBLE);
+        if(!BuildConfig.DEBUG){
+            btnAddNewTheme.setVisibility(View.GONE);
         }
     }
 
     private void getThemesFromDatabase() {
+
+
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference themesRef = database.getReference("themes");
@@ -113,6 +109,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
                     BigText theme = themeSnapshot.getValue(BigText.class);
                     if (theme != null) {
                         mThemes.add(theme);
+                        selectFirstThemeAsDefault();
                     }
                 }
 
@@ -124,6 +121,10 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
                 //Handle possible errors.
             }
         });
+    }
+
+    private void selectFirstThemeAsDefault() {
+        mCurrentSelectedTheme = mThemes.get(0);
     }
 
     private void setUpActionBar() {
@@ -222,11 +223,16 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             addNewEntryToAdapter();
             updateSharedPreferences();
             checkAndShowAppropiateView();
-            startTextActivity(mThemes.get(0));
+            setTextOnBigTextObject(getInputText());
+            startTextActivity(mCurrentSelectedTheme);
             clearInputField();
         } else {
             showSnack(getString(R.string.no_input));
         }
+    }
+
+    private void setTextOnBigTextObject(String text) {
+        mCurrentSelectedTheme.setText(text);
     }
 
     @OnClick(R.id.btnAddNewTheme)
@@ -259,7 +265,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     @Override
     public void OnTextClicked(String text) {
-        //startTextActivity(new BigText(text, R.color.white, R.color.amber));
+        setTextOnBigTextObject(text);
+        startTextActivity(mCurrentSelectedTheme);
     }
 
     private void checkAndShowAppropiateView() {

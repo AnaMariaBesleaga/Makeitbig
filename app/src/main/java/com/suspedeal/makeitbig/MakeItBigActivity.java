@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
@@ -35,10 +34,8 @@ public class MakeItBigActivity extends BaseActivity {
         setFullScreen();
         super.onCreate(savedInstanceState);
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
-
-
-        mBigText.setTextColor(Color.parseColor("#FFE135"));
         setBackground(bigText.getBackgroundUrl());
+        mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));
         mBigText.setText(bigText.getText());
     }
 
@@ -83,6 +80,8 @@ public class MakeItBigActivity extends BaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
     }
+
+
 
     @Override
     public IBaseActivityView getInstance() {
