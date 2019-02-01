@@ -17,8 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -38,8 +40,6 @@ import com.suspedeal.makeitbig.constants.Constants;
 import com.suspedeal.makeitbig.model.BigText;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -51,33 +51,40 @@ import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
 
 /**
  * The text which are made big are saved in shared preferences for persistence. The in memory save is
- * done inside the TextAdapter class
+ * done inside the HistoryAdapter class
  */
 public class MainActivity extends BaseActivity implements OnTextClickListener, IMainActivity {
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
     private static final String EMPTY = "";
-    private TextAdapter adapter;
-    private ArrayList<BigText> mThemes = new ArrayList<>();
+    private HistoryAdapter mHistoryAdapter;
+    private ThemeAdapter mThemeAdapter;
     private BigText mCurrentSelectedTheme;
 
     @BindView(R.id.edit)
     BootstrapEditText edit;
     @BindView(R.id.btnMakeBig)
-    BootstrapButton makeItBig;
-    @BindView(R.id.recycle_history)
-    RecyclerView historyList;
+    AwesomeTextView makeItBig;
+    @BindView(R.id.recycle_list)
+    RecyclerView recycleList;
     @BindView(R.id.list_empty)
     TextView emptyListView;
     @BindView(R.id.adBannerLayout)
     LinearLayout adBannerLayout;
     @BindView(R.id.btnAddNewTheme)
     BootstrapButton btnAddNewTheme;
+    @BindView(R.id.btnThemes)
+    BootstrapButton btnThemes;
+    @BindView(R.id.recycle_themes)
+    RecyclerView themesList;
+    @BindView(R.id.btnHistory)
+    BootstrapButton btnHistory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showAddThemeButtonIfDebug();
+        setUpThemesAdapter();
         getThemesFromDatabase();
         showAds();
         setUpActionBar();
@@ -85,17 +92,44 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         setUpRecyclerView();
         addTextsFromStorageToAdapterAndShow();
         showEmptyListViewIfNoEntriesLeft();
+
+        btnHistory.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+            @Override
+            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
+                recycleList.setAdapter(mThemeAdapter);
+            }
+        });
+
+        btnThemes.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+            @Override
+            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
+                recycleList.setAdapter(mHistoryAdapter);
+            }
+        });
+    }
+
+    private void setUpThemesAdapter() {
+        mThemeAdapter = new ThemeAdapter(new OnThemeClickedListener() {
+            @Override
+            public void onThemeClicked(BigText bigText) {
+                mCurrentSelectedTheme = bigText;
+                Toast.makeText(MainActivity.this, "Selected: " + mCurrentSelectedTheme.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.content_main;
     }
 
     private void showAddThemeButtonIfDebug() {
-        if(!BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
 
     private void getThemesFromDatabase() {
-
-
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference themesRef = database.getReference("themes");
@@ -108,12 +142,13 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
                 for (DataSnapshot themeSnapshot : dataSnapshot.getChildren()) {
                     BigText theme = themeSnapshot.getValue(BigText.class);
                     if (theme != null) {
-                        mThemes.add(theme);
-                        selectFirstThemeAsDefault();
+                        mThemeAdapter.add(theme);
                     }
                 }
 
-                Toast.makeText(MainActivity.this, String.format("Loaded %s themes", String.valueOf(mThemes.size())), Toast.LENGTH_SHORT).show();
+                selectFirstThemeAsDefault();
+
+                Toast.makeText(MainActivity.this, String.format("Loaded %s themes", String.valueOf(mThemeAdapter.getThemes().size())), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -124,7 +159,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void selectFirstThemeAsDefault() {
-        mCurrentSelectedTheme = mThemes.get(0);
+        mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
     }
 
     private void setUpActionBar() {
@@ -148,30 +183,25 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         mAdView.loadAd(adRequest);
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.content_main;
-    }
-
     private void addTextsFromStorageToAdapterAndShow() {
         SharedPreferences prefs = getSharedPreferences();
         int size = prefs.getInt("array_size", 0);
         if (size != 0) {
             for (int i = 0; i < size; i++)
-                adapter.add(prefs.getString("array_" + i, null));
+                mHistoryAdapter.add(prefs.getString("array_" + i, null));
         }
-        historyList.setAdapter(adapter);
+        recycleList.setAdapter(mHistoryAdapter);
     }
 
     /**
-     * Save to storage (shared prefs) with data from the List in the TextAdapter class
+     * Save to storage (shared prefs) with data from the List in the HistoryAdapter class
      */
     private void updateSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences();
         Editor editor = prefs.edit();
-        editor.putInt("array_size", adapter.getItemCount());
-        for (int i = 0; i < adapter.getItemCount(); i++)
-            editor.putString("array_" + i, adapter.getTextListPosition(i));
+        editor.putInt("array_size", mHistoryAdapter.getItemCount());
+        for (int i = 0; i < mHistoryAdapter.getItemCount(); i++)
+            editor.putString("array_" + i, mHistoryAdapter.getTextListPosition(i));
         editor.apply();
     }
 
@@ -194,8 +224,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter.add(getInputText());
-                adapter.notifyDataSetChanged();
+                mHistoryAdapter.add(getInputText());
+                mHistoryAdapter.notifyDataSetChanged();
             }
         });
 
@@ -204,16 +234,16 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     @Override
     protected void onResume() {
         super.onResume();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
+        if (mHistoryAdapter != null) {
+            mHistoryAdapter.notifyDataSetChanged();
         }
     }
 
     private void setUpRecyclerView() {
-        historyList.setHasFixedSize(true);
+        recycleList.setHasFixedSize(true);
         LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        historyList.setLayoutManager(mLayoutManager);
-        adapter = new TextAdapter(this);
+        recycleList.setLayoutManager(mLayoutManager);
+        mHistoryAdapter = new HistoryAdapter(this);
 
     }
 
@@ -237,16 +267,16 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     @OnClick(R.id.btnAddNewTheme)
     void addNewTheme() {
-       startActivity(new Intent(MainActivity.this, AddNewThemeActivity.class));
+        startActivity(new Intent(MainActivity.this, AddNewThemeActivity.class));
     }
 
     /**
-     * The appropriate text entry is removed from inside the adapter. We only need to call the notify
+     * The appropriate text entry is removed from inside the mHistoryAdapter. We only need to call the notify
      * data set changed method to refresh the list
      */
     @Override
     public void OnItemDeleted() {
-        adapter.notifyDataSetChanged();
+        mHistoryAdapter.notifyDataSetChanged();
         //the new list must be saved back to shared preferences; even if zero entries because shared
         // preferences must reflect that there are no entries.
         updateSharedPreferences();
@@ -271,7 +301,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     private void showEmptyListViewIfNoEntriesLeft() {
 
-        if (adapter.getItemCount() != 0) {
+        if (mHistoryAdapter.getItemCount() != 0) {
             hideEmptyView();
         } else {
             showEmptyView();
@@ -280,12 +310,12 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     private void showEmptyView() {
         emptyListView.setVisibility(View.VISIBLE);
-        historyList.setVisibility(View.GONE);
+        recycleList.setVisibility(View.GONE);
     }
 
     private void hideEmptyView() {
         emptyListView.setVisibility(View.GONE);
-        historyList.setVisibility(View.VISIBLE);
+        recycleList.setVisibility(View.VISIBLE);
     }
 
     private void initializeRating() {

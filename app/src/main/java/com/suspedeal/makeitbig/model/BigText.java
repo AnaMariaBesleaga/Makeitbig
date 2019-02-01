@@ -10,12 +10,14 @@ public class BigText implements Serializable {
     private boolean active;
     private boolean free;
     private String backgroundUrl;
+    private String name;
 
     public BigText() {
     }
 
-    public BigText(String text, String textColour, boolean active, boolean free) {
+    public BigText(String text, String themeName, String textColour, boolean active, boolean free) {
         this.text = text;
+        this.name = themeName;
         this.textColour = textColour;
         this.active = active;
         this.free = free;
@@ -68,5 +70,13 @@ public class BigText implements Serializable {
 
     public void setBackgroundUrl(String backgroundUrl) {
         this.backgroundUrl = backgroundUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

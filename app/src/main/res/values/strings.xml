@@ -20,5 +20,8 @@
     <string name="add_new_theme_text">1. Add entry to DB \n2. Add background image to storage with ID from new theme \n3. Populate entry in DB with storage URL</string>
     <string name="new_theme_id_hint">New id</string>
     <string name="new_theme_color_hint">Enter text colour</string>
-    <string name="btnSelectTheme">Theme</string>
+    <string name="new_theme_name_hint">Enter theme name</string>
+    <string name="btnSelectTheme">Themes</string>
+    <string name="button_history">History</string>
+    <string name="button_themes">Themes</string>
 </resources>

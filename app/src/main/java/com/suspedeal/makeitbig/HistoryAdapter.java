@@ -1,5 +1,6 @@
 package com.suspedeal.makeitbig;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
 
     private ArrayList<String> textList;
     private OnTextClickListener listener;
 
-    public TextAdapter(OnTextClickListener listener) {
+    public HistoryAdapter(OnTextClickListener listener) {
         this.listener = listener;
         textList = new ArrayList<>();
     }
@@ -26,8 +27,8 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
 
         MyViewHolder(View view) {
             super(view);
-            text = view.findViewById(R.id.firstLine);
-            delete = view.findViewById(R.id.deleteItem);
+            text = view.findViewById(R.id.theme_name);
+            delete = view.findViewById(R.id.isSelectedTheme);
         }
     }
 
@@ -35,14 +36,15 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
         textList.add(text);
     }
 
+    @NonNull
     @Override
-    public TextAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HistoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_main_single, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final TextAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final HistoryAdapter.MyViewHolder holder, final int position) {
         final String text = textList.get(position);
         holder.text.setText(text);
         holder.text.setOnClickListener(new OnClickListener() {

@@ -24,6 +24,8 @@ public class AddNewThemeActivity extends BaseActivity implements IAddNewThemeAct
     BootstrapEditText etTextColour;
     @BindView(R.id.etNewThemeUid)
     BootstrapEditText etNewThemeUid;
+    @BindView(R.id.etThemeName)
+    BootstrapEditText etThemeName;
 
     private AddNewThemePresenter mAddNewThemePresenter;
 
@@ -41,12 +43,13 @@ public class AddNewThemeActivity extends BaseActivity implements IAddNewThemeAct
     @OnClick(R.id.btnAddNewTheme)
     public void addNewTheme() {
 
-        String newColor = etTextColour.getText().toString();
-        if (newColor.equals("")) {
-            showToast("Please enter the desired text colour");
+        String themeName = etThemeName.getText().toString();
+        String textColour = etTextColour.getText().toString();
+        if (textColour.equals("") || themeName.equals("")) {
+            showToast("Please enter the necessary information");
             return;
         }
-        BigText bigText = new BigText("", newColor, true, true);
+        BigText bigText = new BigText("", themeName, textColour, true, true);
 
         mAddNewThemePresenter.addThemeToDB(bigText);
     }

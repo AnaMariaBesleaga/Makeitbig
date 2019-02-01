@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.suspedeal.makeitbig.base.BaseActivity;
@@ -25,50 +25,51 @@ public class MakeItBigActivity extends BaseActivity {
 
     @BindView(R.id.bigText)
     TextView mBigText;
-    @BindView(R.id.background)
-    FrameLayout mBackground;
     Bitmap mBackgroundBitmap = null;
+    @BindView(R.id.background)
+    ImageView mBackgroundImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreen();
         super.onCreate(savedInstanceState);
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
-        setBackground(bigText.getBackgroundUrl());
+        setBackgroundImageView(bigText.getBackgroundUrl());
         mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));
         mBigText.setText(bigText.getText());
     }
 
-    private void setBackground(final String uri) {
+    private void setBackgroundImageView(final String uri) {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    URL url = null;
-                    try {
-                        url = new URL(uri);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        mBackgroundBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Drawable image = new BitmapDrawable(getResources(), mBackgroundBitmap);
-                            mBackground.setBackground(image);
-                        }
-                    });
-
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                URL url = null;
+                try {
+                    url = new URL(uri);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
-            }).start();
+
+                try {
+                    mBackgroundBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Drawable image = new BitmapDrawable(getResources(), mBackgroundBitmap);
+                        mBackgroundImageView.setImageDrawable(image);
+                        mBackgroundBitmap = null;
+                    }
+                });
+
+
+            }
+        }).start();
     }
 
     @Override
@@ -80,7 +81,6 @@ public class MakeItBigActivity extends BaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
     }
-
 
 
     @Override
