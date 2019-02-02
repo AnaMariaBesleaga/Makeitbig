@@ -1,13 +1,18 @@
 package com.suspedeal.makeitbig;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.suspedeal.makeitbig.model.BigText;
 
 import java.util.ArrayList;
@@ -16,6 +21,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
     private ArrayList<BigText> mThemeList;
     private OnThemeClickedListener listener;
+    private Bitmap mBackground;
 
     public ThemeAdapter(OnThemeClickedListener listener) {
         this.listener = listener;
@@ -34,11 +40,17 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
         TextView text;
         TextView selected;
+        ImageView background;
+        LinearLayout rootLayout;
+        TextView freePaid;
 
         MyViewHolder(View view) {
             super(view);
             text = view.findViewById(R.id.theme_name);
             selected = view.findViewById(R.id.isSelectedTheme);
+            background = view.findViewById(R.id.single_theme_background);
+            rootLayout = view.findViewById(R.id.theme_root_layout);
+            freePaid = view.findViewById(R.id.free_paid_text);
             selected.setVisibility(View.GONE);
         }
     }
@@ -59,14 +71,19 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
     public void onBindViewHolder(final ThemeAdapter.MyViewHolder holder, final int position) {
         final BigText theme = mThemeList.get(position);
 
+        Picasso.get().load(theme.getBackgroundUrl()).into(holder.background);
+
+        holder.freePaid.setText(mapBooleanToPrettyText(theme.isFree()));
+
         if(theme.isSelected()){
             holder.selected.setVisibility(View.VISIBLE);
         }else{
             holder.selected.setVisibility(View.GONE);
         }
 
+        holder.text.setTextColor(Color.parseColor(theme.getTextColour()));
         holder.text.setText(theme.getName());
-        holder.text.setOnClickListener(new OnClickListener() {
+        holder.rootLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -85,6 +102,15 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
                 listener.onThemeClicked(theme);
             }
         });
+    }
+
+    private String mapBooleanToPrettyText(boolean isFree) {
+
+        if(isFree){
+            return "Free";
+        }
+
+        return "Paid";
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.suspedeal.makeitbig.model;
 
+import android.graphics.drawable.Drawable;
+
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;

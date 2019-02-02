@@ -24,4 +24,6 @@
     <string name="btnSelectTheme">Themes</string>
     <string name="button_history">History</string>
     <string name="button_themes">Themes</string>
+    <string name="item_deleted">Item deleted</string>
+    <string name="selected_theme">Current:</string>
 </resources>

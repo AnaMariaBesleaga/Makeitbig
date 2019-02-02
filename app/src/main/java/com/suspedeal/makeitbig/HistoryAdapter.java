@@ -9,15 +9,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
 
-    private ArrayList<String> textList;
+    private ArrayList<String> mHistoryListArray;
     private OnTextClickListener listener;
 
     public HistoryAdapter(OnTextClickListener listener) {
         this.listener = listener;
-        textList = new ArrayList<>();
+        mHistoryListArray = new ArrayList<>();
+    }
+
+    public void reverse() {
+        Collections.reverse(mHistoryListArray);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -33,7 +38,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
     }
 
     public void add(String text) {
-        textList.add(text);
+        mHistoryListArray.add(0, text);
     }
 
     @NonNull
@@ -45,7 +50,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final HistoryAdapter.MyViewHolder holder, final int position) {
-        final String text = textList.get(position);
+        final String text = mHistoryListArray.get(position);
         holder.text.setText(text);
         holder.text.setOnClickListener(new OnClickListener() {
             @Override
@@ -57,7 +62,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         holder.delete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                textList.remove(position);
+                mHistoryListArray.remove(position);
                 listener.OnItemDeleted();
             }
         });
@@ -66,10 +71,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return textList.size();
+        return mHistoryListArray.size();
     }
 
     public String getTextListPosition(int position ){
-        return textList.get(position);
+        return mHistoryListArray.get(position);
     }
 }

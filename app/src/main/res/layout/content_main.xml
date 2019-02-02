@@ -36,10 +36,11 @@
             android:id="@+id/btnMakeBig"
             android:layout_weight="0.1"
             android:layout_width="0dp"
+            android:gravity="center"
             android:layout_gravity="center"
             android:text="X"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:textSize="26sp"
             app:fontAwesomeIcon="fa_arrow_right"
             app:bootstrapBrand="success" />
 
@@ -48,8 +49,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:layout_margin="15dp"
+        android:layout_weight="0.05"
         android:gravity="center_horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:text="@string/selected_theme"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/pattern1"
+                android:id="@+id/single_theme_background"
+                android:scaleType="centerCrop"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/current_theme_text"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="Text sample"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnAddNewTheme"
@@ -108,14 +140,6 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:padding="10dp"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_themes"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"

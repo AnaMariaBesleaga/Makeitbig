@@ -1,9 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/theme_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/free_paid_text"
+        android:layout_gravity="bottom|right"
+        android:text="Free"
+        android:layout_height="wrap_content" />
 
     <com.beardedhen.androidbootstrap.BootstrapWell
         android:layout_width="match_parent"
@@ -11,6 +19,7 @@
 
         <ImageView
             android:layout_width="match_parent"
+            android:id="@+id/single_theme_background"
             android:scaleType="centerCrop"
             android:layout_height="match_parent" />
 
@@ -19,14 +28,14 @@
             android:orientation="horizontal"
             android:layout_height="match_parent">
 
-            <com.beardedhen.androidbootstrap.AwesomeTextView
+            <TextView
                 android:id="@+id/theme_name"
                 android:gravity="start"
+                android:textColor="@color/floral_white"
                 android:layout_weight="0.8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                app:bootstrapBrand="primary"
+                android:textSize="22sp"
                 tools:text="Theme name"/>
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
@@ -34,11 +43,11 @@
                 android:layout_weight="0.2"
                 android:layout_width="0dp"
                 android:gravity="end"
-                tools:text="X"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
+                app:bootstrapBrand="regular"
                 app:fontAwesomeIcon="fa_check_square_o"
-                app:bootstrapBrand="success" />
+                />
         </LinearLayout>
 
     </com.beardedhen.androidbootstrap.BootstrapWell>

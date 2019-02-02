@@ -11,6 +11,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.base.IBaseActivityView;
 import com.suspedeal.makeitbig.model.BigText;
@@ -25,7 +26,6 @@ public class MakeItBigActivity extends BaseActivity {
 
     @BindView(R.id.bigText)
     TextView mBigText;
-    Bitmap mBackgroundBitmap = null;
     @BindView(R.id.background)
     ImageView mBackgroundImageView;
 
@@ -34,42 +34,9 @@ public class MakeItBigActivity extends BaseActivity {
         setFullScreen();
         super.onCreate(savedInstanceState);
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
-        setBackgroundImageView(bigText.getBackgroundUrl());
+        Picasso.get().load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
         mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));
         mBigText.setText(bigText.getText());
-    }
-
-    private void setBackgroundImageView(final String uri) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url = null;
-                try {
-                    url = new URL(uri);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    mBackgroundBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Drawable image = new BitmapDrawable(getResources(), mBackgroundBitmap);
-                        mBackgroundImageView.setImageDrawable(image);
-                        mBackgroundBitmap = null;
-                    }
-                });
-
-
-            }
-        }).start();
     }
 
     @Override

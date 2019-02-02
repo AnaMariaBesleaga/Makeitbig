@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
+import com.squareup.picasso.Picasso;
 import com.suspedeal.makeitbig.addTheme.AddNewThemeActivity;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.base.IBaseActivityView;
@@ -56,8 +58,8 @@ import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
 public class MainActivity extends BaseActivity implements OnTextClickListener, IMainActivity {
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
-    private static final String EMPTY = "";
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REVERSE = 99;
     private HistoryAdapter mHistoryAdapter;
     private ThemeAdapter mThemeAdapter;
     private BigText mCurrentSelectedTheme;
@@ -76,10 +78,12 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     BootstrapButton btnAddNewTheme;
     @BindView(R.id.btnThemes)
     BootstrapButton btnThemes;
-    @BindView(R.id.recycle_themes)
-    RecyclerView themesList;
     @BindView(R.id.btnHistory)
     BootstrapButton btnHistory;
+    @BindView(R.id.single_theme_background)
+    ImageView ivSelectedThemeBackground;
+    @BindView(R.id.current_theme_text)
+    TextView tvCurrentThemeText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,14 +101,22 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         btnHistory.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
             @Override
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
-                recycleList.setAdapter(mThemeAdapter);
+                if (isChecked) {
+                    showEmptyListViewIfNoEntriesLeft();
+                    recycleList.setAdapter(mHistoryAdapter);
+                }
+
             }
         });
 
         btnThemes.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
             @Override
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
-                recycleList.setAdapter(mHistoryAdapter);
+                if (isChecked) {
+                    recycleList.setVisibility(View.VISIBLE);
+                    emptyListView.setVisibility(View.GONE);
+                    recycleList.setAdapter(mThemeAdapter);
+                }
             }
         });
     }
@@ -114,11 +126,17 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             @Override
             public void onThemeClicked(BigText bigText) {
                 mCurrentSelectedTheme = bigText;
+                updateCurrentThemePreview();
                 Toast.makeText(MainActivity.this, "Selected: " + mCurrentSelectedTheme.getName(), Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Selected: " + mCurrentSelectedTheme.getName());
                 mThemeAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void updateCurrentThemePreview() {
+        Picasso.get().load(mCurrentSelectedTheme.getBackgroundUrl()).into(ivSelectedThemeBackground);
+        tvCurrentThemeText.setTextColor(Color.parseColor(mCurrentSelectedTheme.getTextColour()));
     }
 
     @Override
@@ -127,7 +145,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
@@ -163,6 +181,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     private void selectFirstThemeAsDefault() {
         mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
+        updateCurrentThemePreview();
         //adapter needs this information to be able to show the selected checkmark correctly
         mThemeAdapter.setFirstThemeAsDefault();
     }
@@ -192,9 +211,12 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         SharedPreferences prefs = getSharedPreferences();
         int size = prefs.getInt("array_size", 0);
         if (size != 0) {
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size; i++){
                 mHistoryAdapter.add(prefs.getString("array_" + i, null));
+            }
+            mHistoryAdapter.reverse();
         }
+
         recycleList.setAdapter(mHistoryAdapter);
     }
 
@@ -221,7 +243,15 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     private void startTextActivity(BigText bigText) {
         Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
         i.putExtra("textObject", bigText);
-        startActivity(i);
+        startActivityForResult(i, REVERSE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == REVERSE){
+//            mHistoryAdapter.reverse();
+//        }
     }
 
     private void addNewEntryToAdapter() {
@@ -286,6 +316,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         // preferences must reflect that there are no entries.
         updateSharedPreferences();
         showEmptyListViewIfNoEntriesLeft();
+        showToast(getString(R.string.item_deleted));
     }
 
     private String getInputText() {
