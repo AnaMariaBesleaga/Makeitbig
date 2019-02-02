@@ -1,5 +1,7 @@
 package com.suspedeal.makeitbig.model;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 public class BigText implements Serializable {
@@ -9,6 +11,7 @@ public class BigText implements Serializable {
     private String uid;
     private boolean active;
     private boolean free;
+    private boolean isSelected;
     private String backgroundUrl;
     private String name;
 
@@ -78,5 +81,14 @@ public class BigText implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Exclude
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

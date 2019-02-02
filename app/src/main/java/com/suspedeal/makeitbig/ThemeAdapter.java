@@ -11,20 +11,23 @@ import android.widget.TextView;
 import com.suspedeal.makeitbig.model.BigText;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder> {
 
-    private ArrayList<BigText> themeList;
+    private ArrayList<BigText> mThemeList;
     private OnThemeClickedListener listener;
 
     public ThemeAdapter(OnThemeClickedListener listener) {
         this.listener = listener;
-        themeList = new ArrayList<>();
+        mThemeList = new ArrayList<>();
     }
 
     public ArrayList<BigText> getThemes() {
-        return themeList;
+        return mThemeList;
+    }
+
+    public void setFirstThemeAsDefault() {
+        mThemeList.get(0).setSelected(true);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -36,11 +39,13 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
             super(view);
             text = view.findViewById(R.id.theme_name);
             selected = view.findViewById(R.id.isSelectedTheme);
+            selected.setVisibility(View.GONE);
         }
     }
 
     public void add(BigText theme) {
-        themeList.add(theme);
+
+        mThemeList.add(theme);
     }
 
     @NonNull
@@ -52,12 +57,31 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(final ThemeAdapter.MyViewHolder holder, final int position) {
-        final BigText theme = themeList.get(position);
+        final BigText theme = mThemeList.get(position);
+
+        if(theme.isSelected()){
+            holder.selected.setVisibility(View.VISIBLE);
+        }else{
+            holder.selected.setVisibility(View.GONE);
+        }
+
         holder.text.setText(theme.getName());
         holder.text.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //set selected for current item in list
+                mThemeList.get(position).setSelected(true);
                 holder.selected.setVisibility(View.VISIBLE);
+
+                //set selected to false for all other items
+                for(BigText bigTextSelected : mThemeList){
+                    //set selected to false for all other entries in the list
+                    if(!(bigTextSelected == mThemeList.get(position))){
+                        bigTextSelected.setSelected(false);
+                    }
+                }
+
                 listener.onThemeClicked(theme);
             }
         });
@@ -65,10 +89,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return themeList.size();
+        return mThemeList.size();
     }
 
     public BigText getThemeListPosition(int position ){
-        return themeList.get(position);
+        return mThemeList.get(position);
     }
 }

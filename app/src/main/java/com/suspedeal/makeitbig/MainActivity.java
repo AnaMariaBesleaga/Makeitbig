@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
-import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
     private static final String EMPTY = "";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private HistoryAdapter mHistoryAdapter;
     private ThemeAdapter mThemeAdapter;
     private BigText mCurrentSelectedTheme;
@@ -114,6 +115,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             public void onThemeClicked(BigText bigText) {
                 mCurrentSelectedTheme = bigText;
                 Toast.makeText(MainActivity.this, "Selected: " + mCurrentSelectedTheme.getName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Selected: " + mCurrentSelectedTheme.getName());
+                mThemeAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -124,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
@@ -160,6 +163,8 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
 
     private void selectFirstThemeAsDefault() {
         mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
+        //adapter needs this information to be able to show the selected checkmark correctly
+        mThemeAdapter.setFirstThemeAsDefault();
     }
 
     private void setUpActionBar() {

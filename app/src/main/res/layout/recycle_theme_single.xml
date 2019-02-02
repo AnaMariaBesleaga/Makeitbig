@@ -1,26 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
-    android:orientation="vertical"
-    android:padding="6dip">
+    android:orientation="vertical">
 
     <com.beardedhen.androidbootstrap.BootstrapWell
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="70dp">
 
         <ImageView
             android:layout_width="match_parent"
-            android:src="@drawable/pattern1"
             android:scaleType="centerCrop"
-            android:layout_height="50dp" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
                 android:id="@+id/theme_name"
@@ -37,7 +34,6 @@
                 android:layout_weight="0.2"
                 android:layout_width="0dp"
                 android:gravity="end"
-                android:visibility="gone"
                 tools:text="X"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
