@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -41,7 +41,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
         TextView text;
         TextView selected;
         ImageView background;
-        LinearLayout rootLayout;
+        RelativeLayout rootLayout;
         TextView freePaid;
 
         MyViewHolder(View view) {
@@ -56,8 +56,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
     }
 
     public void add(BigText theme) {
-
-        mThemeList.add(theme);
+        mThemeList.add(0, theme);
     }
 
     @NonNull

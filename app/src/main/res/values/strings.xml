@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="enlarge">Enlarge</string>
     <string name="hint_input">enter text to make it big</string>
-    <string name="btn_text">Make Big</string>
+    <string name="btn_text">Make it big</string>
     <string name="title_activity_settings">Settings</string>
     <string name="no_history">No history to show</string>
     <string name="footer_text">Footer %1$s, %2$s</string>

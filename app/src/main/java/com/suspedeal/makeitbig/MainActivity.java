@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     @BindView(R.id.edit)
     BootstrapEditText edit;
     @BindView(R.id.btnMakeBig)
-    AwesomeTextView makeItBig;
+    BootstrapButton makeItBig;
     @BindView(R.id.recycle_list)
     RecyclerView recycleList;
     @BindView(R.id.list_empty)
@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
@@ -243,15 +243,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     private void startTextActivity(BigText bigText) {
         Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
         i.putExtra("textObject", bigText);
-        startActivityForResult(i, REVERSE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == REVERSE){
-//            mHistoryAdapter.reverse();
-//        }
+        startActivity(i);
     }
 
     private void addNewEntryToAdapter() {
