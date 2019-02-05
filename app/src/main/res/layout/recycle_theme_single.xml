@@ -8,50 +8,53 @@
     <TextView
         android:id="@+id/free_paid_text"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="Free" />
 
-    <com.beardedhen.androidbootstrap.BootstrapWell
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
-        <ImageView
-            android:id="@+id/single_theme_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <com.beardedhen.androidbootstrap.AwesomeTextView
-            android:id="@+id/isSelectedTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="end|center"
-            android:text="X"
-            android:textSize="22sp"
-            app:bootstrapBrand="regular"
-            app:fontAwesomeIcon="fa_check_square_o" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/theme_name"
+            <ImageView
+                android:id="@+id/single_theme_background"
                 android:layout_width="0dp"
+                android:layout_weight="0.9"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                android:id="@+id/isSelectedTheme"
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:gravity="start"
-                android:padding="5dp"
-                android:textColor="@color/floral_white"
+                android:layout_gravity="end|center"
+                android:text="X"
                 android:textSize="22sp"
-                tools:text="Theme name" />
+                app:bootstrapBrand="info"
+                app:fontAwesomeIcon="fa_check_square_o" />
 
         </LinearLayout>
 
-    </com.beardedhen.androidbootstrap.BootstrapWell>
+        <TextView
+            android:id="@+id/theme_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/floral_white"
+            android:textSize="22sp"
+            tools:text="Theme name" />
+
+    </FrameLayout>
 
 </RelativeLayout>

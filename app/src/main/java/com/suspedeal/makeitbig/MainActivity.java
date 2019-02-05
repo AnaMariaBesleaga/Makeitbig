@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }

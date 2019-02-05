@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class MakeItBigActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreen();
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
         Picasso.get().load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
         mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));

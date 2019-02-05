@@ -77,7 +77,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
         if(theme.isSelected()){
             holder.selected.setVisibility(View.VISIBLE);
         }else{
-            holder.selected.setVisibility(View.GONE);
+            holder.selected.setVisibility(View.INVISIBLE);
         }
 
         holder.text.setTextColor(Color.parseColor(theme.getTextColour()));
