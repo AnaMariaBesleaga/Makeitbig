@@ -2,6 +2,7 @@ package com.suspedeal.makeitbig.repository;
 
 import com.suspedeal.makeitbig.addTheme.OnAddUrlToObjectListener;
 import com.suspedeal.makeitbig.addTheme.OnThemeAddedToDBCallback;
+import com.suspedeal.makeitbig.main.OnGetThemeCallback;
 import com.suspedeal.makeitbig.model.BigText;
 
 /**
@@ -10,5 +11,5 @@ import com.suspedeal.makeitbig.model.BigText;
 public interface IThemeRepository {
     void addThemeToDB(OnThemeAddedToDBCallback onThemeAddedToDBCallback, BigText bigText);
     void getDownloadUrl(OnAddUrlToObjectListener listener);
-
+    void getThemesFromDB(OnGetThemeCallback onGetThemeCallback);
 }

@@ -28,20 +28,10 @@
             <ImageView
                 android:id="@+id/single_theme_background"
                 android:layout_width="0dp"
+                android:src="@drawable/black_bck"
                 android:layout_weight="0.9"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop" />
-
-            <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:id="@+id/isSelectedTheme"
-                android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:text="X"
-                android:textSize="22sp"
-                app:bootstrapBrand="info"
-                app:fontAwesomeIcon="fa_check_square_o" />
 
         </LinearLayout>
 

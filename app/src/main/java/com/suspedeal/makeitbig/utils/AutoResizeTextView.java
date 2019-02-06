@@ -1,4 +1,4 @@
-package com.suspedeal.makeitbig; /**
+package com.suspedeal.makeitbig.utils; /**
  *               DO WHAT YOU WANT TO PUBLIC LICENSE
  *                    Version 2, December 2004
  *

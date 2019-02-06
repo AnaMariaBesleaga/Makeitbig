@@ -65,14 +65,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="15dp"
-        android:layout_weight="0.05"
+        android:layout_weight="0.08"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center"
             android:text="@string/selected_theme" />
 
         <FrameLayout
@@ -84,14 +85,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/pattern1" />
+                android:src="@drawable/black_bck" />
 
             <TextView
                 android:id="@+id/current_theme_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Text sample"
+                android:text="@string/your_text"
                 android:textColor="@color/white" />
 
         </FrameLayout>

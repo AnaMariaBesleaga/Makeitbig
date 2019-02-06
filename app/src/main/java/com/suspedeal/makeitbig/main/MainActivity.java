@@ -1,4 +1,4 @@
-package com.suspedeal.makeitbig;
+package com.suspedeal.makeitbig.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,40 +7,46 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.squareup.picasso.Picasso;
+import com.suspedeal.makeitbig.BuildConfig;
+import com.suspedeal.makeitbig.R;
 import com.suspedeal.makeitbig.addTheme.AddNewThemeActivity;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.base.IBaseActivityView;
 import com.suspedeal.makeitbig.constants.Constants;
+import com.suspedeal.makeitbig.makeitbig.MakeItBigActivity;
 import com.suspedeal.makeitbig.model.BigText;
+import com.suspedeal.makeitbig.repository.ThemeRepository;
+import com.suspedeal.makeitbig.utils.NetworkStatus;
 import com.suspedeal.makeitbig.utils.RatingDialogCustom;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -55,39 +61,47 @@ import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
  * The text which are made big are saved in shared preferences for persistence. The in memory save is
  * done inside the HistoryAdapter class
  */
-public class MainActivity extends BaseActivity implements OnTextClickListener, IMainActivity {
+public class MainActivity extends BaseActivity implements OnHistoryTextClickListener, IMainActivity {
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int REVERSE = 99;
     private HistoryAdapter mHistoryAdapter;
     private ThemeAdapter mThemeAdapter;
     private BigText mCurrentSelectedTheme;
+    //presenter
+    private MainPresenter mMainPresenter;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
     @BindView(R.id.edit)
     BootstrapEditText edit;
     @BindView(R.id.btnMakeBig)
-    BootstrapButton makeItBig;
+    BootstrapButton btnMakeBig;
+    @BindView(R.id.layout_main)
+    LinearLayout layoutMain;
+    @BindView(R.id.btnAddNewTheme)
+    BootstrapButton btnAddNewTheme;
+    @BindView(R.id.single_theme_background)
+    ImageView singleThemeBackground;
+    @BindView(R.id.current_theme_text)
+    TextView currentThemeText;
+    @BindView(R.id.btnHistory)
+    BootstrapButton btnHistory;
+    @BindView(R.id.btnThemes)
+    BootstrapButton btnThemes;
     @BindView(R.id.recycle_list)
     RecyclerView recycleList;
     @BindView(R.id.list_empty)
-    TextView emptyListView;
+    TextView listEmpty;
     @BindView(R.id.adBannerLayout)
     LinearLayout adBannerLayout;
-    @BindView(R.id.btnAddNewTheme)
-    BootstrapButton btnAddNewTheme;
-    @BindView(R.id.btnThemes)
-    BootstrapButton btnThemes;
-    @BindView(R.id.btnHistory)
-    BootstrapButton btnHistory;
-    @BindView(R.id.single_theme_background)
-    ImageView ivSelectedThemeBackground;
-    @BindView(R.id.current_theme_text)
-    TextView tvCurrentThemeText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMainPresenter = new MainPresenter(this, new ThemeRepository());
         showAddThemeButtonIfDebug();
         setUpThemesAdapter();
         getThemesFromDatabase();
@@ -114,29 +128,29 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
                 if (isChecked) {
                     recycleList.setVisibility(View.VISIBLE);
-                    emptyListView.setVisibility(View.GONE);
+                    listEmpty.setVisibility(View.GONE);
                     recycleList.setAdapter(mThemeAdapter);
                 }
             }
         });
-    }
 
-    private void setUpThemesAdapter() {
-        mThemeAdapter = new ThemeAdapter(new OnThemeClickedListener() {
+        edit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onThemeClicked(BigText bigText) {
-                mCurrentSelectedTheme = bigText;
-                updateCurrentThemePreview();
-                Toast.makeText(MainActivity.this, "Selected: " + mCurrentSelectedTheme.getName(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Selected: " + mCurrentSelectedTheme.getName());
-                mThemeAdapter.notifyDataSetChanged();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateCurrentThemePreview(false);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
-    }
-
-    private void updateCurrentThemePreview() {
-        Picasso.get().load(mCurrentSelectedTheme.getBackgroundUrl()).into(ivSelectedThemeBackground);
-        tvCurrentThemeText.setTextColor(Color.parseColor(mCurrentSelectedTheme.getTextColour()));
     }
 
     @Override
@@ -144,46 +158,65 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         return R.layout.content_main;
     }
 
+    private void setUpThemesAdapter() {
+        mThemeAdapter = new ThemeAdapter(new OnThemeClickedListener() {
+            @Override
+            public void onThemeClicked(BigText bigText) {
+                String currentText = mCurrentSelectedTheme.getText();
+                mCurrentSelectedTheme = bigText;
+                mCurrentSelectedTheme.setText(currentText);
+                updateCurrentThemePreview(true);
+                Log.d(TAG, "Selected: " + mCurrentSelectedTheme.getName());
+            }
+        });
+    }
+
+    private void updateCurrentThemePreview(boolean refreshBackground) {
+
+        if(refreshBackground && isOnline()){
+            Picasso.get().load(mCurrentSelectedTheme.getBackgroundUrl()).into(singleThemeBackground);
+        }
+
+        currentThemeText.setTextColor(Color.parseColor(mCurrentSelectedTheme.getTextColour()));
+
+        if(edit.getText().toString().equals("")){
+            currentThemeText.setText(mCurrentSelectedTheme.getText());
+        }else{
+            currentThemeText.setText(edit.getText().toString());
+        }
+
+    }
+
+    private boolean isOnline() {
+        return NetworkStatus.getInstance(this).isOnline();
+    }
+
     private void showAddThemeButtonIfDebug() {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
 
     private void getThemesFromDatabase() {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference themesRef = database.getReference("themes");
+        if(isOnline()){
+            mMainPresenter.getThemes();
+        }else{
+            createAndShowDefaultTheme();
+            selectFirstThemeAsDefault();
+            showToast(getString(R.string.no_internet));
+        }
 
-        Query query = themesRef.orderByChild("uid");
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot themeSnapshot : dataSnapshot.getChildren()) {
-                    BigText theme = themeSnapshot.getValue(BigText.class);
-                    if (theme != null) {
-                        mThemeAdapter.add(theme);
-                    }
-                }
-
-                selectFirstThemeAsDefault();
-
-                Toast.makeText(MainActivity.this, String.format("Loaded %s themes", String.valueOf(mThemeAdapter.getThemes().size())), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Handle possible errors.
-            }
-        });
     }
 
-    private void selectFirstThemeAsDefault() {
+    private void createAndShowDefaultTheme() {
+        mThemeAdapter.addToStart(new BigText("text", "Offline theme", "#ffffff", true, true, true));
+    }
+
+    @Override
+    public void selectFirstThemeAsDefault() {
         mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
-        updateCurrentThemePreview();
-        //adapter needs this information to be able to show the selected checkmark correctly
-        mThemeAdapter.setFirstThemeAsDefault();
+        updateCurrentThemePreview(true);
     }
 
     private void setUpActionBar() {
@@ -211,7 +244,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         SharedPreferences prefs = getSharedPreferences();
         int size = prefs.getInt("array_size", 0);
         if (size != 0) {
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++) {
                 mHistoryAdapter.add(prefs.getString("array_" + i, null));
             }
             mHistoryAdapter.reverse();
@@ -243,6 +276,15 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     private void startTextActivity(BigText bigText) {
         Intent i = new Intent(MainActivity.this, MakeItBigActivity.class);
         i.putExtra("textObject", bigText);
+        //log event to see with theme was used more
+
+        if(!BuildConfig.DEBUG){
+            Bundle bundle = new Bundle();
+            bundle.putString("theme_name", bigText.getName());
+            bundle.putString("mib_text", bigText.getText());
+            getFirebaseAnalytics().logEvent("theme_used", bundle);
+        }
+
         startActivity(i);
     }
 
@@ -270,6 +312,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
         recycleList.setHasFixedSize(true);
         LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recycleList.setLayoutManager(mLayoutManager);
+        //show history by default
         mHistoryAdapter = new HistoryAdapter(this);
 
     }
@@ -282,7 +325,6 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             showEmptyListViewIfNoEntriesLeft();
             setTextOnBigTextObject(getInputText());
             startTextActivity(mCurrentSelectedTheme);
-            clearInputField();
         } else {
             showSnack(getString(R.string.no_input));
         }
@@ -324,6 +366,7 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     @Override
     public void OnTextClicked(String text) {
         setTextOnBigTextObject(text);
+        currentThemeText.setText(text);
         startTextActivity(mCurrentSelectedTheme);
     }
 
@@ -337,12 +380,12 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     private void showEmptyView() {
-        emptyListView.setVisibility(View.VISIBLE);
+        listEmpty.setVisibility(View.VISIBLE);
         recycleList.setVisibility(View.GONE);
     }
 
     private void hideEmptyView() {
-        emptyListView.setVisibility(View.GONE);
+        listEmpty.setVisibility(View.GONE);
         recycleList.setVisibility(View.VISIBLE);
     }
 
@@ -378,6 +421,16 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
     }
 
     @Override
+    public void clearThemesList() {
+        mThemeAdapter.clear();
+    }
+
+    @Override
+    public void setNewThemeList(List<BigText> themes) {
+        mThemeAdapter.setThemes(themes);
+    }
+
+    @Override
     public IBaseActivityView getInstance() {
         return this;
     }
@@ -398,5 +451,19 @@ public class MainActivity extends BaseActivity implements OnTextClickListener, I
             super.onPostExecute(result);
             Toast.makeText(MainActivity.this, getString(R.string.feedback_sent), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        if(BuildConfig.DEBUG){
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.app_version, menu);
+            menu.findItem(R.id.appVersion).setTitle(BuildConfig.VERSION_NAME);
+            return true;
+        }
+
+        return false;
+
     }
 }

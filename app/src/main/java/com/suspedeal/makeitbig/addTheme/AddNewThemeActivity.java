@@ -49,7 +49,7 @@ public class AddNewThemeActivity extends BaseActivity implements IAddNewThemeAct
             showToast("Please enter the necessary information");
             return;
         }
-        BigText bigText = new BigText("", themeName, textColour, true, true);
+        BigText bigText = new BigText("", themeName, textColour, true, true, false);
 
         mAddNewThemePresenter.addThemeToDB(bigText);
     }

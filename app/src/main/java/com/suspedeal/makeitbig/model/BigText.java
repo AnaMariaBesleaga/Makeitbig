@@ -16,19 +16,22 @@ public class BigText implements Serializable {
     private boolean isSelected;
     private String backgroundUrl;
     private String name;
+    private boolean promoted;
 
     public BigText() {
     }
 
-    public BigText(String text, String themeName, String textColour, boolean active, boolean free) {
+    public BigText(String text, String themeName, String textColour, boolean active, boolean free, boolean promoted) {
         this.text = text;
         this.name = themeName;
         this.textColour = textColour;
         this.active = active;
         this.free = free;
         this.backgroundUrl = "";
+        this.promoted = promoted;
     }
 
+    @Exclude
     public String getText() {
         return text;
     }
@@ -83,6 +86,14 @@ public class BigText implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isPromoted() {
+        return promoted;
+    }
+
+    public void setPromoted(boolean promoted) {
+        this.promoted = promoted;
     }
 
     @Exclude

@@ -18,7 +18,10 @@ import com.google.firebase.storage.StorageReference;
 import com.suspedeal.makeitbig.addTheme.OnAddUrlToObjectListener;
 import com.suspedeal.makeitbig.addTheme.OnSetDownloadUrlCallback;
 import com.suspedeal.makeitbig.addTheme.OnThemeAddedToDBCallback;
+import com.suspedeal.makeitbig.main.OnGetThemeCallback;
 import com.suspedeal.makeitbig.model.BigText;
+
+import java.util.ArrayList;
 
 public class ThemeRepository implements IThemeRepository {
 
@@ -77,6 +80,36 @@ public class ThemeRepository implements IThemeRepository {
                     listener.onFailed(exception.getMessage());
                 }
             });
+    }
+
+    @Override
+    public void getThemesFromDB(final OnGetThemeCallback listener) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference themesRef = database.getReference("themes");
+
+        Query query = themesRef.orderByChild("promoted");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<BigText> list = new ArrayList<>();
+
+                for (DataSnapshot themeSnapshot : dataSnapshot.getChildren()) {
+                    BigText theme = themeSnapshot.getValue(BigText.class);
+                    if (theme != null && theme.isActive()) {
+                        list.add(0, theme);
+                    }
+                }
+
+                listener.onDataChanged(list);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Handle possible errors.
+            }
+        });
     }
 
     private void setDownloadUrl(final OnSetDownloadUrlCallback listener, final String uri) {

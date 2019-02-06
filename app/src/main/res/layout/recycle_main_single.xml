@@ -27,7 +27,7 @@
                 tools:text="Saved text"/>
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:id="@+id/isSelectedTheme"
+                android:id="@+id/deleteHistoryItem"
                 android:layout_weight="0.2"
                 android:layout_width="0dp"
                 android:gravity="end"

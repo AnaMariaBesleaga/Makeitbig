@@ -26,4 +26,6 @@
     <string name="button_themes">Themes</string>
     <string name="item_deleted">Item deleted</string>
     <string name="selected_theme">Current:</string>
+    <string name="your_text">Preview text</string>
+    <string name="no_internet">We could not detect an active internet connection. Default theme will be used.</string>
 </resources>

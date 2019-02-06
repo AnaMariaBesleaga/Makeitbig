@@ -1,10 +1,6 @@
-package com.suspedeal.makeitbig;
+package com.suspedeal.makeitbig.makeitbig;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.suspedeal.makeitbig.R;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.base.IBaseActivityView;
 import com.suspedeal.makeitbig.model.BigText;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.suspedeal.makeitbig.utils.NetworkStatus;
 
 import butterknife.BindView;
 
@@ -34,9 +28,12 @@ public class MakeItBigActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreen();
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
-        Picasso.get().load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
+
+        if(NetworkStatus.getInstance(this).isOnline()){
+            Picasso.get().load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
+        }
+
         mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));
         mBigText.setText(bigText.getText());
     }
@@ -49,6 +46,7 @@ public class MakeItBigActivity extends BaseActivity {
     private void setFullScreen() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
 

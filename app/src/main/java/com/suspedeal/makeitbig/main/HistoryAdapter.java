@@ -1,4 +1,4 @@
-package com.suspedeal.makeitbig;
+package com.suspedeal.makeitbig.main;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,15 +8,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.suspedeal.makeitbig.R;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
 
     private ArrayList<String> mHistoryListArray;
-    private OnTextClickListener listener;
+    private OnHistoryTextClickListener listener;
 
-    public HistoryAdapter(OnTextClickListener listener) {
+    public HistoryAdapter(OnHistoryTextClickListener listener) {
         this.listener = listener;
         mHistoryListArray = new ArrayList<>();
     }
@@ -33,7 +35,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
         MyViewHolder(View view) {
             super(view);
             text = view.findViewById(R.id.theme_name);
-            delete = view.findViewById(R.id.isSelectedTheme);
+            delete = view.findViewById(R.id.deleteHistoryItem);
         }
     }
 

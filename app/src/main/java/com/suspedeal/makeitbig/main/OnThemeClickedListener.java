@@ -1,4 +1,4 @@
-package com.suspedeal.makeitbig;
+package com.suspedeal.makeitbig.main;
 
 import com.suspedeal.makeitbig.model.BigText;
 
