@@ -15,17 +15,19 @@
         android:id="@+id/layout_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <com.beardedhen.androidbootstrap.BootstrapEditText
             android:id="@+id/edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="top|start"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.7"
+            android:gravity="start"
             android:hint="@string/hint"
             android:inputType="textMultiLine"
-            android:padding="10dp"
             android:scrollbars="vertical"
             app:bootstrapBrand="info"
             app:bootstrapSize="lg"
@@ -33,20 +35,113 @@
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnMakeBig"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.3"
+            android:gravity="center"
             android:text="@string/btn_text"
-            app:bootstrapBrand="primary"
-            app:bootstrapSize="lg"
-            app:bootstrapText="Make it big"
-            app:roundedCorners="true" />
+            android:textSize="40sp"
+            app:bootstrapBrand="success"
+            app:roundedCorners="true"
+            app:bootstrapText="@string/btn_text" />
 
     </LinearLayout>
 
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnAddNewTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/btn_add_new_theme"
+        app:bootstrapBrand="primary"
+        app:bootstrapSize="lg"
+        app:bootstrapText="Add theme"
+        app:roundedCorners="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:layout_weight="0.08"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="center"
+            android:text="@string/selected_theme" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/single_theme_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/black_bck" />
+
+            <TextView
+                android:id="@+id/current_theme_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/your_text"
+                android:textColor="@color/white" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.beardedhen.androidbootstrap.BootstrapButtonGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal"
+            app:bootstrapBrand="info"
+            app:bootstrapSize="lg"
+            app:buttonMode="radio"
+            app:roundedCorners="true">
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btnHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/button_history"
+                app:bootstrapBrand="info"
+                app:bootstrapSize="lg"
+                app:buttonMode="radio"
+                app:checked="true" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btnThemes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/button_themes"
+                app:bootstrapBrand="info"
+                app:bootstrapSize="lg"
+                app:buttonMode="radio" />
+
+        </com.beardedhen.androidbootstrap.BootstrapButtonGroup>
+
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycle_history"
+        android:id="@+id/recycle_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
@@ -56,10 +151,10 @@
     <TextView
         android:id="@+id/list_empty"
         android:layout_width="wrap_content"
-        android:layout_weight="0.5"
         android:layout_height="0dp"
-        android:gravity="center_vertical"
         android:layout_gravity="center_horizontal"
+        android:layout_weight="0.5"
+        android:gravity="center_vertical"
         android:padding="10dp"
         android:text="@string/no_history" />
 

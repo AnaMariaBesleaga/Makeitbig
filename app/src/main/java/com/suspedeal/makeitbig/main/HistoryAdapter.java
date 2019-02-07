@@ -1,5 +1,6 @@
-package com.suspedeal.makeitbig;
+package com.suspedeal.makeitbig.main;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,16 +8,23 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.suspedeal.makeitbig.R;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> {
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHolder> {
 
-    private ArrayList<String> textList;
-    private OnTextClickListener listener;
+    private ArrayList<String> mHistoryListArray;
+    private OnHistoryTextClickListener listener;
 
-    public TextAdapter(OnTextClickListener listener) {
+    public HistoryAdapter(OnHistoryTextClickListener listener) {
         this.listener = listener;
-        textList = new ArrayList<>();
+        mHistoryListArray = new ArrayList<>();
+    }
+
+    public void reverse() {
+        Collections.reverse(mHistoryListArray);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -26,24 +34,25 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
 
         MyViewHolder(View view) {
             super(view);
-            text = view.findViewById(R.id.firstLine);
-            delete = view.findViewById(R.id.deleteItem);
+            text = view.findViewById(R.id.theme_name);
+            delete = view.findViewById(R.id.deleteHistoryItem);
         }
     }
 
     public void add(String text) {
-        textList.add(text);
+        mHistoryListArray.add(0, text);
     }
 
+    @NonNull
     @Override
-    public TextAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HistoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_main_single, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final TextAdapter.MyViewHolder holder, final int position) {
-        final String text = textList.get(position);
+    public void onBindViewHolder(final HistoryAdapter.MyViewHolder holder, final int position) {
+        final String text = mHistoryListArray.get(position);
         holder.text.setText(text);
         holder.text.setOnClickListener(new OnClickListener() {
             @Override
@@ -55,7 +64,7 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
         holder.delete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                textList.remove(position);
+                mHistoryListArray.remove(position);
                 listener.OnItemDeleted();
             }
         });
@@ -64,10 +73,10 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return textList.size();
+        return mHistoryListArray.size();
     }
 
     public String getTextListPosition(int position ){
-        return textList.get(position);
+        return mHistoryListArray.get(position);
     }
 }

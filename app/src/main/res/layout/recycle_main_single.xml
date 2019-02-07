@@ -17,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:id="@+id/firstLine"
+                android:id="@+id/theme_name"
                 android:gravity="start"
                 android:layout_weight="0.8"
                 android:layout_width="0dp"
@@ -27,7 +27,7 @@
                 tools:text="Saved text"/>
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:id="@+id/deleteItem"
+                android:id="@+id/deleteHistoryItem"
                 android:layout_weight="0.2"
                 android:layout_width="0dp"
                 android:gravity="end"
