@@ -9,7 +9,7 @@
     <string name="footer_text">Footer %1$s, %2$s</string>
     <string name="description">Description</string>
     <string name="hint">Enter text to make it big</string>
-    <string name="no_input">Please enter a text or select one from the list</string>
+    <string name="no_input">Please enter a text or select one from the history list</string>
     <string name="rating_text">How do you like the application so far?</string>
     <string name="not_now">Later</string>
     <string name="rating_improve_question">Tell us what we can improve</string>
@@ -28,4 +28,6 @@
     <string name="selected_theme">Current:</string>
     <string name="your_text">Preview text</string>
     <string name="no_internet">We could not detect an active internet connection. Default theme will be used.</string>
+    <string name="preview_text">Example text</string>
+    <string name="current_version">Current version: %s</string>
 </resources>

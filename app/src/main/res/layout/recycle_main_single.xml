@@ -1,45 +1,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="6dp"
-              android:orientation="vertical"
-              android:padding="6dip">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:orientation="horizontal"
+    android:padding="6dip">
 
     <com.beardedhen.androidbootstrap.BootstrapWell
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_weight="0.8"
+        android:layout_width="0dp"
+        android:backgroundTint="@color/white"
+        android:layout_height="wrap_content"
+        app:bootstrapSize="lg">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <com.beardedhen.androidbootstrap.AwesomeTextView
                 android:id="@+id/theme_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="start"
-                android:layout_weight="0.8"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:fontFamily="@font/karla"
+                android:textSize="20sp"
                 app:bootstrapBrand="primary"
-                tools:text="Saved text"/>
-
-            <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:id="@+id/deleteHistoryItem"
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:gravity="end"
-                tools:text="X"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                app:fontAwesomeIcon="fa_remove"
-                app:bootstrapBrand="danger" />
+                tools:text="Saved text" />
         </LinearLayout>
 
-
-
     </com.beardedhen.androidbootstrap.BootstrapWell>
+
+    <com.beardedhen.androidbootstrap.AwesomeTextView
+        android:id="@+id/deleteHistoryItem"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:textSize="25sp"
+        android:fontFamily="@font/karla"
+        app:bootstrapBrand="danger"
+        app:fontAwesomeIcon="fa_trash"
+        tools:text="X" />
 
 </LinearLayout>
