@@ -1,5 +1,6 @@
 package com.suspedeal.makeitbig.main;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -12,11 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.suspedeal.makeitbig.R;
 import com.suspedeal.makeitbig.model.BigText;
-import com.suspedeal.makeitbig.utils.NetworkStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +24,16 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
     private List<BigText> mThemeList;
     private OnThemeClickedListener listener;
-    private Bitmap mBackground;
+    private Context mContext;
 
-    public ThemeAdapter(OnThemeClickedListener listener) {
+    public ThemeAdapter(OnThemeClickedListener listener, Context context) {
         this.listener = listener;
         mThemeList = new ArrayList<>();
+        mContext = context;
     }
 
     public List<BigText> getThemes() {
         return mThemeList;
-    }
-
-    public void setFirstThemeAsDefault() {
-        mThemeList.get(0).setSelected(true);
     }
 
     public void clear() {
@@ -68,10 +64,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
         mThemeList.add(0, theme);
     }
 
-    public void addToEnd(BigText theme) {
-        mThemeList.add(theme);
-    }
-
     @NonNull
     @Override
     public ThemeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -85,7 +77,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
 
         //this meand that themes have been fetched
         if(!theme.getBackgroundUrl().equals("")){
-            Picasso.get().load(theme.getBackgroundUrl()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.background);
+            //we need this only for the black on white theme because it has borders and we need to show those
+            if(theme.getName().equals("Black on white")){
+                holder.background.setScaleType(ImageView.ScaleType.FIT_XY);
+            }
+
+            Glide.with(mContext).load(theme.getBackgroundUrl()).into(holder.background);
         }
 
         holder.freePaid.setText(mapBooleanToPrettyText(theme.isFree()));
@@ -111,9 +108,5 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
     @Override
     public int getItemCount() {
         return mThemeList.size();
-    }
-
-    public BigText getThemeListPosition(int position ){
-        return mThemeList.get(position);
     }
 }

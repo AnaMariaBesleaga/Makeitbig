@@ -17,8 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,13 +25,13 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
-import com.squareup.picasso.Picasso;
 import com.suspedeal.makeitbig.BuildConfig;
 import com.suspedeal.makeitbig.R;
 import com.suspedeal.makeitbig.addTheme.AddNewThemeActivity;
@@ -168,13 +166,21 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
                 updateCurrentThemePreview(true);
                 Log.d(TAG, "Selected: " + mCurrentSelectedTheme.getName());
             }
-        });
+        }, this);
     }
 
     private void updateCurrentThemePreview(boolean refreshBackground) {
 
-        if(refreshBackground && isOnline()){
-            Picasso.get().load(mCurrentSelectedTheme.getBackgroundUrl()).into(singleThemeBackground);
+
+        if (refreshBackground && isOnline()) {
+
+            if (mCurrentSelectedTheme.getName().equals("Black on white")) {
+                singleThemeBackground.setScaleType(ImageView.ScaleType.FIT_XY);
+            } else {
+                singleThemeBackground.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
+            Glide.with(this).load(mCurrentSelectedTheme.getBackgroundUrl()).into(singleThemeBackground);
         }
 
         currentThemeText.setTextColor(Color.parseColor(mCurrentSelectedTheme.getTextColour()));
@@ -216,6 +222,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     @Override
     public void selectFirstThemeAsDefault() {
         mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
+        mCurrentSelectedTheme.setText(getString(R.string.preview_text));
         updateCurrentThemePreview(true);
     }
 
@@ -342,10 +349,12 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     /**
      * The appropriate text entry is removed from inside the mHistoryAdapter. We only need to call the notify
      * data set changed method to refresh the list
+     * @param position
      */
     @Override
-    public void OnItemDeleted() {
-        mHistoryAdapter.notifyDataSetChanged();
+    public void OnItemDeleted(int position) {
+        mHistoryAdapter.notifyItemRemoved(position);
+        mHistoryAdapter.notifyItemRangeChanged(position, mHistoryAdapter.getItemCount() - position);
         //the new list must be saved back to shared preferences; even if zero entries because shared
         // preferences must reflect that there are no entries.
         updateSharedPreferences();
@@ -451,19 +460,5 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
             super.onPostExecute(result);
             Toast.makeText(MainActivity.this, getString(R.string.feedback_sent), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        if(BuildConfig.DEBUG){
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.app_version, menu);
-            menu.findItem(R.id.appVersion).setTitle(BuildConfig.VERSION_NAME);
-            return true;
-        }
-
-        return false;
-
     }
 }

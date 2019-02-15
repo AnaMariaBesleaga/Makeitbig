@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
-import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.suspedeal.makeitbig.R;
@@ -25,7 +24,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseAct
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
         initializeAds();
-        TypefaceProvider.registerDefaultIconSets();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
     }

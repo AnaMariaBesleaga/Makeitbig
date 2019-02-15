@@ -30,8 +30,7 @@
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
             app:bootstrapBrand="info"
-            app:bootstrapSize="lg"
-            app:roundedCorners="true" />
+            app:bootstrapSize="lg" />
 
         <com.beardedhen.androidbootstrap.BootstrapButton
             android:id="@+id/btnMakeBig"
@@ -112,8 +111,7 @@
             android:orientation="horizontal"
             app:bootstrapBrand="info"
             app:bootstrapSize="lg"
-            app:buttonMode="radio"
-            app:roundedCorners="true">
+            app:buttonMode="radio">
 
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/btnHistory"

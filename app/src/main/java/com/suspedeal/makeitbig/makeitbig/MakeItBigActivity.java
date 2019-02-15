@@ -8,7 +8,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.suspedeal.makeitbig.R;
 import com.suspedeal.makeitbig.base.BaseActivity;
 import com.suspedeal.makeitbig.base.IBaseActivityView;
@@ -31,7 +31,7 @@ public class MakeItBigActivity extends BaseActivity {
         BigText bigText = (BigText) getIntent().getSerializableExtra("textObject");
 
         if(NetworkStatus.getInstance(this).isOnline()){
-            Picasso.get().load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
+            Glide.with(this).load(bigText.getBackgroundUrl()).into(mBackgroundImageView);
         }
 
         mBigText.setTextColor(Color.parseColor(bigText.getTextColour()));
