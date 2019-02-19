@@ -1,5 +1,8 @@
 package com.suspedeal.makeitbig.main;
 
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,9 +30,11 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.bumptech.glide.Glide;
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.impl.TrelloImpl;
@@ -67,6 +72,8 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
 
     private static final String HISTORY_PREF_FILE = "MBHistory";
     private static final String TAG = MainActivity.class.getSimpleName();
+    @BindView(R.id.btnGetToken)
+    BootstrapButton btnGetToken;
     private HistoryAdapter mHistoryAdapter;
     private ThemeAdapter mThemeAdapter;
     private BigText mCurrentSelectedTheme;
@@ -160,6 +167,11 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         });
     }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.content_main;
+    }
+
     private void showThemesList() {
         recycleList.setVisibility(View.VISIBLE);
         listEmpty.setVisibility(View.GONE);
@@ -191,14 +203,9 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         final Uri marketUri = Uri.parse("https://play.google.com/store/apps/details?id=com.suspedeal.makeitbig&hl=en");
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
-        } catch (android.content.ActivityNotFoundException ex) {
+        } catch (ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this, "Couldn't find PlayStore on this device", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.content_main;
     }
 
     private void setUpThemesAdapter() {
@@ -234,9 +241,9 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
 
         currentThemeText.setTextColor(Color.parseColor(mCurrentSelectedTheme.getTextColour()));
 
-        if(edit.getText().toString().equals("")){
+        if (edit.getText().toString().equals("")) {
             currentThemeText.setText(mCurrentSelectedTheme.getText());
-        }else{
+        } else {
             currentThemeText.setText(edit.getText().toString());
         }
 
@@ -254,9 +261,9 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
 
     private void getThemesFromDatabase() {
 
-        if(isOnline()){
+        if (isOnline()) {
             mMainPresenter.getThemes();
-        }else{
+        } else {
             createAndShowDefaultTheme();
             selectFirstThemeAsDefault();
             showToast(getString(R.string.no_internet));
@@ -334,7 +341,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         i.putExtra("textObject", bigText);
         //log event to see with theme was used more
 
-        if(!BuildConfig.DEBUG){
+        if (!BuildConfig.DEBUG) {
             Bundle bundle = new Bundle();
             bundle.putString("theme_name", bigText.getName());
             bundle.putString("mib_text", bigText.getText());
@@ -395,9 +402,17 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         startActivity(new Intent(MainActivity.this, AddNewThemeActivity.class));
     }
 
+    @OnClick(R.id.btnGetToken)
+    void copyFirebaseTokenToClipboard() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("token", FirebaseInstanceId.getInstance().getToken());
+        clipboard.setPrimaryClip(clip);
+    }
+
     /**
      * The appropriate text entry is removed from inside the mHistoryAdapter. We only need to call the notify
      * data set changed method to refresh the list
+     *
      * @param position
      */
     @Override

@@ -60,6 +60,18 @@
         app:bootstrapText="Add theme"
         app:roundedCorners="true" />
 
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnGetToken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="Get token"
+        app:bootstrapBrand="primary"
+        app:bootstrapSize="lg"
+        app:bootstrapText="Get token"
+        app:roundedCorners="true" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
