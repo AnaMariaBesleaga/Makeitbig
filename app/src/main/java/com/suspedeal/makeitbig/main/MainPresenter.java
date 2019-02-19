@@ -27,7 +27,8 @@ class MainPresenter implements IMainPresenter {
                 mMainActivityView.clearThemesList();
                 mMainActivityView.setNewThemeList(list);
                 mMainActivityView.selectFirstThemeAsDefault();
-
+                //i need to call this here after the themes have been fetched
+                mMainActivityView.checkIfNewThemePush();
             }
         });
     }

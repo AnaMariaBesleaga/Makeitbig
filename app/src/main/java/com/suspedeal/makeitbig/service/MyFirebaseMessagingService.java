@@ -16,21 +16,34 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.suspedeal.makeitbig.main.MainActivity;
 import com.suspedeal.makeitbig.R;
 
-/**
- * TODO: Add a class header comment!
- */
+//This class receives the data from FCM
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String CHANNEL_ID = "channel_id";
+    public static final String TITLE = "title";
+    public static final String BODY = "body";
+    public static final String REGARDS = "regards";
+    public static final String NEW_THEME = "new theme";
+    public static final String THEME_ID = "theme id";
+    public static final String REVIEW_REQUEST = "review request";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        sendNotification(remoteMessage.getData().get("body"), remoteMessage.getData().get("title"));
+        sendNotification(remoteMessage.getData().get(TITLE), remoteMessage.getData().get(BODY),
+                remoteMessage.getData().get(REGARDS), remoteMessage.getData().get(THEME_ID));
     }
 
-    private void sendNotification(String body, String title) {
+    private void sendNotification(String title, String body, String regards, String themeId) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(TITLE, title);
+        intent.putExtra(BODY, body);
+        intent.putExtra(REGARDS, regards);
+
+        if(themeId != null){
+            intent.putExtra(THEME_ID, themeId);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);

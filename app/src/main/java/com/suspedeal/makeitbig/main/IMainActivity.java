@@ -9,4 +9,5 @@ interface IMainActivity {
     void clearThemesList();
     void setNewThemeList(List<BigText> themes);
     void selectFirstThemeAsDefault();
+    void checkIfNewThemePush();
 }

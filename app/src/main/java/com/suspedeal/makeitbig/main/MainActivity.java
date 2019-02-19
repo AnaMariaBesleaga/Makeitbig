@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -54,6 +55,9 @@ import static com.suspedeal.makeitbig.constants.Constants.STAR_RATING_THRESHOLD;
 import static com.suspedeal.makeitbig.constants.Constants.TRELLO_ACCESS_TOKEN;
 import static com.suspedeal.makeitbig.constants.Constants.TRELLO_APP_KEY;
 import static com.suspedeal.makeitbig.constants.Constants.TRELLO_FEEDBACK_LIST;
+import static com.suspedeal.makeitbig.service.MyFirebaseMessagingService.REGARDS;
+import static com.suspedeal.makeitbig.service.MyFirebaseMessagingService.REVIEW_REQUEST;
+import static com.suspedeal.makeitbig.service.MyFirebaseMessagingService.THEME_ID;
 
 /**
  * The text which are made big are saved in shared preferences for persistence. The in memory save is
@@ -100,6 +104,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMainPresenter = new MainPresenter(this, new ThemeRepository());
+        checkIfNewReviewPush();
         showAddThemeButtonIfDebug();
         setUpThemesAdapter();
         getThemesFromDatabase();
@@ -108,7 +113,6 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         initializeRating();
         setUpRecyclerView();
         addTextsFromStorageToAdapterAndShow();
-        showEmptyListViewIfNoEntriesLeft();
 
         btnHistory.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
             @Override
@@ -125,10 +129,15 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
             @Override
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
                 if (isChecked) {
-                    recycleList.setVisibility(View.VISIBLE);
-                    listEmpty.setVisibility(View.GONE);
-                    recycleList.setAdapter(mThemeAdapter);
+                    showThemesList();
                 }
+            }
+        });
+
+        btnThemes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showThemesList();
             }
         });
 
@@ -151,6 +160,42 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         });
     }
 
+    private void showThemesList() {
+        recycleList.setVisibility(View.VISIBLE);
+        listEmpty.setVisibility(View.GONE);
+        recycleList.setAdapter(mThemeAdapter);
+    }
+
+    @Override
+    public void checkIfNewThemePush() {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null && extras.getString(REGARDS) != null) {
+            changeToThemeListview(extras.getString(THEME_ID));
+        }
+    }
+
+    public void checkIfNewReviewPush() {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null && extras.getString(REGARDS) != null && extras.getString(REGARDS).equals(REVIEW_REQUEST)) {
+            redirectUserToPlayStore();
+        }
+    }
+
+    private void changeToThemeListview(String themeId) {
+        recycleList.scrollToPosition(mThemeAdapter.getPositionBasedOnThemeId(themeId));
+    }
+
+    private void redirectUserToPlayStore() {
+        final Uri marketUri = Uri.parse("https://play.google.com/store/apps/details?id=com.suspedeal.makeitbig&hl=en");
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, marketUri));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "Couldn't find PlayStore on this device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.content_main;
@@ -169,8 +214,12 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         }, this);
     }
 
-    private void updateCurrentThemePreview(boolean refreshBackground) {
+    private void populateEditText() {
+        edit.setText(mCurrentSelectedTheme.getText());
+        edit.setSelection(edit.getText().length());
+    }
 
+    private void updateCurrentThemePreview(boolean refreshBackground) {
 
         if (refreshBackground && isOnline()) {
 
@@ -198,7 +247,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (!BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
@@ -224,6 +273,8 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
         mCurrentSelectedTheme = mThemeAdapter.getThemes().get(0);
         mCurrentSelectedTheme.setText(getString(R.string.preview_text));
         updateCurrentThemePreview(true);
+        recycleList.setAdapter(mThemeAdapter);
+        showThemesList();
     }
 
     private void setUpActionBar() {
@@ -256,8 +307,6 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
             }
             mHistoryAdapter.reverse();
         }
-
-        recycleList.setAdapter(mHistoryAdapter);
     }
 
     /**
@@ -376,6 +425,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     public void OnTextClicked(String text) {
         setTextOnBigTextObject(text);
         currentThemeText.setText(text);
+        populateEditText();
         startTextActivity(mCurrentSelectedTheme);
     }
 

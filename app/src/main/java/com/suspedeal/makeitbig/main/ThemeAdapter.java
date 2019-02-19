@@ -36,6 +36,21 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder
         return mThemeList;
     }
 
+    public int getPositionBasedOnThemeId(String themeId){
+
+        for (int i = 0; i < mThemeList.size(); i++)
+        {
+            BigText bigText = mThemeList.get(i);
+            if (bigText.getUid().equals(themeId))
+            {
+                return mThemeList.indexOf(bigText);
+            }
+        }
+
+        return -1;
+
+    }
+
     public void clear() {
         mThemeList = new ArrayList<>();
     }

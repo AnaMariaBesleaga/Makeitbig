@@ -114,6 +114,17 @@
             app:buttonMode="radio">
 
             <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/btnThemes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/button_themes"
+                app:bootstrapBrand="info"
+                app:bootstrapSize="lg"
+                app:checked="true"
+                app:buttonMode="radio" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/btnHistory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -122,17 +133,7 @@
                 app:bootstrapBrand="info"
                 app:bootstrapSize="lg"
                 app:buttonMode="radio"
-                app:checked="true" />
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/btnThemes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/button_themes"
-                app:bootstrapBrand="info"
-                app:bootstrapSize="lg"
-                app:buttonMode="radio" />
+                 />
 
         </com.beardedhen.androidbootstrap.BootstrapButtonGroup>
 
@@ -150,6 +151,7 @@
         android:id="@+id/list_empty"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:visibility="invisible"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.5"
         android:gravity="center_vertical"
