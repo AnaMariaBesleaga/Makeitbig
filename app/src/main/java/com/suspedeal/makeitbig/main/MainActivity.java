@@ -254,7 +254,7 @@ public class MainActivity extends BaseActivity implements OnHistoryTextClickList
     }
 
     private void showAddThemeButtonIfDebug() {
-        if (BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             btnAddNewTheme.setVisibility(View.GONE);
         }
     }
